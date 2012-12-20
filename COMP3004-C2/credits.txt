@@ -1,0 +1,9 @@
+Advice on loading obj files and structuring vertices:
+	http://stackoverflow.com/questions/7795995/parsing-a-wavefront-obj-file-using-c
+
+Method for parsing a file in C++
+	http://cs.dvc.edu/HowTo_Cparse.html
+
+Processing of OBJ and MTL files
+	http://xiangchen.wordpress.com/2010/05/04/loading-a-obj-file-in-opengl/
+
