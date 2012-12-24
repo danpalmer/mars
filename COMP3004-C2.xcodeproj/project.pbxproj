@@ -14,6 +14,7 @@
 		37F552EE168276F5004CB411 /* VertexShader.vert in CopyFiles */ = {isa = PBXBuildFile; fileRef = 37F552E516826E8C004CB411 /* VertexShader.vert */; };
 		37F552EF168276F5004CB411 /* FragmentShader.frag in CopyFiles */ = {isa = PBXBuildFile; fileRef = 37F552E616826E9B004CB411 /* FragmentShader.frag */; };
 		37F5551216833C50004CB411 /* SceneObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37F5551016833C50004CB411 /* SceneObject.cpp */; };
+		37FD94791684C9B200716C5A /* mars-landscape.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 37FD94781684C96800716C5A /* mars-landscape.obj */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,6 +24,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				37FD94791684C9B200716C5A /* mars-landscape.obj in CopyFiles */,
 				37F552EE168276F5004CB411 /* VertexShader.vert in CopyFiles */,
 				37F552EF168276F5004CB411 /* FragmentShader.frag in CopyFiles */,
 			);
@@ -34,8 +36,8 @@
 		37F552D5168269EA004CB411 /* COMP3004-C2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "COMP3004-C2"; sourceTree = BUILT_PRODUCTS_DIR; };
 		37F552D9168269EA004CB411 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		37F552E216826A1A004CB411 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		37F552E516826E8C004CB411 /* VertexShader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = VertexShader.vert; sourceTree = "<group>"; };
-		37F552E616826E9B004CB411 /* FragmentShader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = FragmentShader.frag; sourceTree = "<group>"; };
+		37F552E516826E8C004CB411 /* VertexShader.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = VertexShader.vert; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
+		37F552E616826E9B004CB411 /* FragmentShader.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = FragmentShader.frag; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.glsl; };
 		37F552E716826F4F004CB411 /* shaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shaders.cpp; sourceTree = "<group>"; };
 		37F552E816826F4F004CB411 /* shaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shaders.h; sourceTree = "<group>"; };
 		37F552EA16827160004CB411 /* utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utils.cpp; sourceTree = "<group>"; };
@@ -43,6 +45,7 @@
 		37F5551016833C50004CB411 /* SceneObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneObject.cpp; sourceTree = "<group>"; };
 		37F5551116833C50004CB411 /* SceneObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneObject.h; sourceTree = "<group>"; };
 		37F5551316833D99004CB411 /* credits.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = credits.txt; sourceTree = "<group>"; };
+		37FD94781684C96800716C5A /* mars-landscape.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = "mars-landscape.obj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +81,6 @@
 			isa = PBXGroup;
 			children = (
 				37F552D9168269EA004CB411 /* main.cpp */,
-				37F552E416826E74004CB411 /* Shaders */,
 				37F552E716826F4F004CB411 /* shaders.cpp */,
 				37F552E816826F4F004CB411 /* shaders.h */,
 				37F552EA16827160004CB411 /* utils.cpp */,
@@ -86,6 +88,8 @@
 				37F5551016833C50004CB411 /* SceneObject.cpp */,
 				37F5551116833C50004CB411 /* SceneObject.h */,
 				37F5551316833D99004CB411 /* credits.txt */,
+				37F552E416826E74004CB411 /* Shaders */,
+				37FD94771684C95D00716C5A /* Resources */,
 			);
 			path = "COMP3004-C2";
 			sourceTree = "<group>";
@@ -97,6 +101,14 @@
 				37F552E616826E9B004CB411 /* FragmentShader.frag */,
 			);
 			name = Shaders;
+			sourceTree = "<group>";
+		};
+		37FD94771684C95D00716C5A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				37FD94781684C96800716C5A /* mars-landscape.obj */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,6 +268,7 @@
 				37F552E1168269EA004CB411 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

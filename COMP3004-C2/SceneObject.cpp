@@ -22,14 +22,14 @@ using std::endl;
 
 SceneObject::SceneObject(char const *objFilename, char const *mtlFilename) {
     this->_loadOBJ(objFilename);
+	smooth = false;
+	wireframe = false;
 	check("Created Object");
 }
 
 void SceneObject::buffer() {
 	glGenBuffers(1, &vertexBuffer);
-	
 	bind();
-	
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &(vertices[0]), GL_STATIC_DRAW);
 }
 
@@ -65,8 +65,12 @@ void SceneObject::unbind() {
 
 void SceneObject::render() {
 	bind();
-	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)vertices.size());
+
+	// TODO: Set smoothing.
+	// glShadeModel(smooth ? GL_SMOOTH : GL_FLAT);
+	glDrawArrays(wireframe ? GL_LINES : GL_TRIANGLES, 0, (GLsizei)vertices.size());
 	check("Rendered SceneObject");
+	
 	unbind();
 }
 
@@ -137,7 +141,6 @@ void SceneObject::_loadOBJ(const char *filename) {
 				cout << "Failed to parse face" << endl;
 				continue;
 			}
-//			Vertex *vertex = new Vertex;
 			
 			vertexIndices.push_back(vertexIndex[0] - 1);
 			vertexIndices.push_back(vertexIndex[1] - 1);
@@ -158,6 +161,18 @@ void SceneObject::_loadOBJ(const char *filename) {
 		} else if (STARTSWITH("#")) {
 			// Comment - ignore
 			continue;
+		} else if (STARTSWITH("s ")) {
+			// Smooth
+			int match = sscanf(buf, "s 1");
+			if (match == 1) {
+				smooth = true;
+			} else {
+				match = sscanf(buf, "s 0");
+				if (match == 0) {
+					smooth = false;
+				}
+			}
+			
 		} else if (STARTSWITH("o ") || STARTSWITH("g ")) {
 			// Named group - ignore
 			continue;
@@ -183,6 +198,8 @@ void SceneObject::_loadOBJ(const char *filename) {
 		vertex.normal = normal;
 
 		vertex.colour = RED;
+		
+		vertex.lighting = glm::vec4(0.2, 0.8, 1.0, 100.0);
 		
 		vertices.push_back(vertex);
 	}

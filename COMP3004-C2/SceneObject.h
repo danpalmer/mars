@@ -23,13 +23,11 @@ typedef struct {
 	glm::vec4 colour;
 	glm::vec3 normal;
 	glm::vec2 texcoords;
-	glm::vec3 lighting; // Ambient, Diffuse, Specular
+	glm::vec4 lighting; // Ambient, Diffuse, Specular, Shininess
 } Vertex;
 
 class SceneObject
 {
-    std::vector<Vertex> vertices;
-	GLuint vertexBuffer;
 
 public:
     SceneObject(char const *objFilename, char const *mtlFilename);
@@ -41,6 +39,10 @@ public:
 	void render();
 
 private:
+	std::vector<Vertex> vertices;
+	GLuint vertexBuffer;
+	bool smooth, wireframe;
+	
 	void _loadOBJ(char const *filename);
 };
 

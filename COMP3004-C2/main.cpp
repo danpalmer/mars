@@ -25,39 +25,49 @@
 #include "SceneObject.h"
 
 using namespace glm;
+using namespace std;
 
 void init();
-void render(int frame, std::vector<SceneObject *>);
+void render(int frame, vector<SceneObject *> sceneObjects, vector<glm::vec3> sceneLights, GLuint shader);
 void GLFWCALL keyHandler(int key, int action);
+void checkKeyHolds();
+void resetCameraPos1();
 
 GLuint vao;
 bool onTour = false;
+
+struct Camera {
+	vec3 location;
+	vec3 focus;
+	vec3 up;
+	vec3 movement;
+	float rotation;
+	float rotationSpeed;
+};
+struct Camera camera;
 
 int main(int argc, const char * argv[]) {
 	int running = GL_TRUE;
 	init();
 	
-	std::vector<GLint> shaders;
+	vector<GLint> shaders;
 	shaders.push_back(setupShader("VertexShader.vert", GL_VERTEX_SHADER));
 	shaders.push_back(setupShader("FragmentShader.frag", GL_FRAGMENT_SHADER));
 	
-	GLint shader = linkShaders(shaders);
-	check("Setup Shaders");
+	vector<vec3> sceneLights;
+	vector<SceneObject *> sceneObjects;
+	
+	GLuint shader = linkShaders(shaders);
 	glUseProgram(shader);
+	check("Setup Shaders");
 	
-	SceneObject *ship = new SceneObject("cube.obj", "");
-	ship->buffer();
+	SceneObject *landscape = new SceneObject("mars-landscape.obj", "");
+	landscape->buffer();
+	sceneObjects.push_back(landscape);
 	
-	mat4 perspective = glm::perspective(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
-	mat4 model = mat4(1.0f);
 	
-	vec3 cameraLocation =	vec3(0.0, 1.0, 3.0);
-	vec3 cameraFocus =		vec3(0.0, 0.0, 0.0);
-	vec3 cameraUp =			vec3(0.0, 1.0, 0.0);
-	mat4 camera = lookAt(cameraLocation, cameraFocus, cameraUp);
-	
-	std::vector<SceneObject *> sceneObjects;
-	sceneObjects.push_back(ship);
+	vec3 sun = vec3(0.0, 100.0, 0.0);
+	sceneLights.push_back(sun);
 	
 	int i = 0;
 	static double t0 = glfwGetTime();
@@ -68,7 +78,9 @@ int main(int argc, const char * argv[]) {
 			i++;
 		}
 		
-		render(i, sceneObjects);
+		checkKeyHolds();
+		
+		render(i, sceneObjects, sceneLights, shader);
 		
 		glFlush();
 		glfwSwapBuffers();
@@ -94,7 +106,7 @@ void init() {
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	
-	if (!glfwOpenWindow(800, 800, 0, 0, 0, 0, 0, 1, GLFW_WINDOW)) {
+	if (!glfwOpenWindow(1280, 800, 0, 0, 0, 0, 0, 1, GLFW_WINDOW)) {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
@@ -111,11 +123,32 @@ void init() {
 	glBindVertexArray(vao);
 	
 	glfwSetKeyCallback(keyHandler);
+	
+	resetCameraPos1();
 }
 
-void render(int frame, std::vector<SceneObject *> sceneObjects) {
+void render(int frame, vector<SceneObject *> sceneObjects, vector<glm::vec3> sceneLights, GLuint shader) {
+	
+	mat4 perspective = glm::perspective(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
+	mat4 model = mat4(1.0f);
+	
+	camera.location = camera.location + camera.movement;
+	camera.focus = camera.focus + camera.movement;
+	camera.rotation += camera.rotationSpeed;
+	
+	mat4 view = lookAt(camera.location, camera.focus, camera.up);
+	view = rotate(view, camera.rotation, vec3(0.0, 1.0, 0.0));
+	
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	
+	glUniformMatrix4fv(glGetUniformLocation(shader, "perspective"), 1, GL_FALSE, value_ptr(perspective));
+	glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, value_ptr(model));
+	glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, value_ptr(view));
+	
+	glUniform1i(glGetUniformLocation(shader, "lightcount"), (GLint)sceneLights.size());
+	glUniform3fv(glGetUniformLocation(shader, "lightpos"), sizeof(glm::vec3), &sceneLights[0][0]);
+	glUniform3fv(glGetUniformLocation(shader, "camerapos"), 1, value_ptr(camera.location));
 	
 	for (int i = 0; i < sceneObjects.size(); i++) {
 		sceneObjects[i]->render();
@@ -153,24 +186,64 @@ void GLFWCALL keyHandler(int key, int action) {
 	} else if (TEST_KEY('T')) {
 		// Start tour, ignore other key presses except exit
 		onTour = true;
-	}
-	
-	// Movement
-	if (GLFW_TEST_KEY(GLFW_KEY_LEFT)) {
-		// Move left
-	} else if (GLFW_TEST_KEY(GLFW_KEY_RIGHT)) {
-		// Move right
-	} else if (GLFW_TEST_KEY(GLFW_KEY_UP)) {
-		// Increase forward speed of camera
-	} else if (GLFW_TEST_KEY(GLFW_KEY_DOWN)) {
-		// Decrease forward speed of camera (no reverse!)
-	} else if (GLFW_TEST_KEY(GLFW_KEY_SPACE)) {
-		// Stop
-	} else if (GLFW_TEST_KEY(GLFW_KEY_PAGEUP)) {
-		// Increase elevation of camera
-	} else if (GLFW_TEST_KEY(GLFW_KEY_PAGEDOWN)) {
-		// Decrease elevation of camera
 	} else if (TEST_KEY('R')) {
 		// Reset all animation
 	}
+}
+
+void checkKeyHolds() {
+	if (onTour) {
+		return;
+	}
+	
+	camera.movement = vec3(0.0, 0.0, 0.0);
+	camera.rotationSpeed = 0.0;
+	
+#define TURNING_SPEED 2.0
+#define MOVEMENT_SPEED 1.0
+	
+	// Movement
+	if (GLFW_TEST_KEY(GLFW_KEY_LEFT)) {
+		// Turn left
+		camera.rotationSpeed = -TURNING_SPEED;
+	}
+	if (GLFW_TEST_KEY(GLFW_KEY_RIGHT)) {
+		// Turn right
+		camera.rotationSpeed = TURNING_SPEED;
+	}
+	if (GLFW_TEST_KEY(GLFW_KEY_UP)) {
+		// Increase forward speed of camera
+		camera.movement.z = -MOVEMENT_SPEED;
+	}
+	if (GLFW_TEST_KEY(GLFW_KEY_DOWN)) {
+		// Decrease forward speed of camera (no reverse!)
+		camera.movement.z = MOVEMENT_SPEED;
+	}
+	if (GLFW_TEST_KEY(GLFW_KEY_SPACE)) {
+		// Stop
+		camera.movement = vec3(0.0, 0.0, 0.0);
+		camera.rotationSpeed = 0.0;
+	}
+	if (GLFW_TEST_KEY(GLFW_KEY_PAGEUP) || (GLFW_TEST_KEY(GLFW_KEY_SPECIAL) && GLFW_TEST_KEY(GLFW_KEY_UP))) {
+		// Increase elevation of camera
+		camera.movement.y = MOVEMENT_SPEED;
+	}
+	if (GLFW_TEST_KEY(GLFW_KEY_PAGEDOWN) || (GLFW_TEST_KEY(GLFW_KEY_SPECIAL) && GLFW_TEST_KEY(GLFW_KEY_DOWN))) {
+		// Decrease elevation of camera
+		camera.movement.y = -MOVEMENT_SPEED;
+	}
+	
+#undef TURNING_SPEED
+#undef MOVEMENT_SPEED
+}
+#undef TEST_KEY
+#undef GLFW_TEST_KEY
+
+void resetCameraPos1() {
+	camera.location =	vec3(0.0, 20.0, 3.0);
+	camera.focus =		vec3(0.0, 19.0, 0.0);
+	camera.up =			vec3(0.0, 1.0, 0.0);
+	camera.movement =	vec3(0.0, 0.0, 0.0);
+	camera.rotation =	0.0;
+	camera.rotationSpeed = 0.0;
 }
