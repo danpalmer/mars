@@ -7,3 +7,9 @@ Method for parsing a file in C++
 Processing of OBJ and MTL files
 	http://xiangchen.wordpress.com/2010/05/04/loading-a-obj-file-in-opengl/
 
+Advice on handling multiple textures and use of GLSL
+	Andy Esser http://twitter.com/LeadHyperion
+
+Camera
+	http://r3dux.org/2011/05/simple-opengl-keyboard-and-mouse-fps-controls/
+

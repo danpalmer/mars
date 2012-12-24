@@ -9,16 +9,19 @@
 #include "SceneObject.h"
 
 #include <fstream>
-using std::ifstream;
-
-using std::cout;
-using std::endl;
+using namespace std;
+using namespace glm;
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "utils.h"
+
+SceneObject::SceneObject() {
+	smooth = false;
+	wireframe = false;
+}
 
 SceneObject::SceneObject(char const *objFilename, char const *mtlFilename) {
     this->_loadOBJ(objFilename);
@@ -28,12 +31,20 @@ SceneObject::SceneObject(char const *objFilename, char const *mtlFilename) {
 }
 
 void SceneObject::buffer() {
+	glGenVertexArrays(1, &vertexArray);
+	glBindVertexArray(vertexArray);
+	
 	glGenBuffers(1, &vertexBuffer);
-	bind();
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &(vertices[0]), GL_STATIC_DRAW);
+	
+	glBindVertexArray(0);
+	check("Buffered Object");
 }
 
 void SceneObject::bind() {
+	glBindVertexArray(vertexArray);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	
 #define VERTEX_OFFSETOF(f) (GLvoid *)((char *)&(vertices[0].f) - (char *)&(vertices[0]))
@@ -42,6 +53,7 @@ void SceneObject::bind() {
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), VERTEX_OFFSETOF(normal));
 	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), VERTEX_OFFSETOF(texcoords));
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), VERTEX_OFFSETOF(lighting));
+	glVertexAttribPointer(5, 1, GL_INT, GL_FALSE, sizeof(Vertex), VERTEX_OFFSETOF(texture));
 #undef VERTEX_OFFSETOF
 	
 	glEnableVertexAttribArray(0);
@@ -49,25 +61,40 @@ void SceneObject::bind() {
 	glEnableVertexAttribArray(2);
 	glEnableVertexAttribArray(3);
 	glEnableVertexAttribArray(4);
+	glEnableVertexAttribArray(5);
 	
 	check("Bound SceneObject");
+	
+	for (int i = 0; i < textures.size(); i++) {
+		textures[i]->bind(GL_TEXTURE0 + i);
+	}
+	
+	check("Bound Textures for SceneObject");
 }
 
 void SceneObject::unbind() {
+	
+	for (int i = 0; i < textures.size(); i++) {
+		textures[i]->unbind(GL_TEXTURE0 + i);
+	}
+	
+	check("Unbound Textured for SceneObject");
+	
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 	glDisableVertexAttribArray(3);
 	glDisableVertexAttribArray(4);
+	glDisableVertexAttribArray(5);
+	
+	glBindVertexArray(0);
 	
 	check("Unbound SceneObject");
 }
 
 void SceneObject::render() {
 	bind();
-
-	// TODO: Set smoothing.
-	// glShadeModel(smooth ? GL_SMOOTH : GL_FLAT);
+	
 	glDrawArrays(wireframe ? GL_LINES : GL_TRIANGLES, 0, (GLsizei)vertices.size());
 	check("Rendered SceneObject");
 	
@@ -86,11 +113,11 @@ void SceneObject::_loadOBJ(const char *filename) {
 	
 	const int MAX_CHARS_PER_LINE = 128;
 	
-	std::vector<glm::vec3> verts;
-	std::vector<glm::vec2> uvs;
-	std::vector<glm::vec3> normals;
+	vector<vec3> verts;
+	vector<vec2> uvs;
+	vector<vec3> normals;
 	
-	std::vector<int> vertexIndices, uvIndices, normalIndices;
+	vector<int> vertexIndices, uvIndices, normalIndices;
 	
 	while (!fin.eof()) {
 		char buf[MAX_CHARS_PER_LINE];
@@ -142,15 +169,15 @@ void SceneObject::_loadOBJ(const char *filename) {
 				continue;
 			}
 			
-			vertexIndices.push_back(vertexIndex[0] - 1);
-			vertexIndices.push_back(vertexIndex[1] - 1);
-			vertexIndices.push_back(vertexIndex[2] - 1);
-			uvIndices.push_back(uvIndex[0] - 1);
-			uvIndices.push_back(uvIndex[1] - 1);
-			uvIndices.push_back(uvIndex[2] - 1);
-			normalIndices.push_back(normalIndex[0] - 1);
-			normalIndices.push_back(normalIndex[1] - 1);
-			normalIndices.push_back(normalIndex[2] - 1);
+			vertexIndices.push_back(vertexIndex[0]);
+			vertexIndices.push_back(vertexIndex[1]);
+			vertexIndices.push_back(vertexIndex[2]);
+			uvIndices.push_back(uvIndex[0]);
+			uvIndices.push_back(uvIndex[1]);
+			uvIndices.push_back(uvIndex[2]);
+			normalIndices.push_back(normalIndex[0]);
+			normalIndices.push_back(normalIndex[1]);
+			normalIndices.push_back(normalIndex[2]);
 			
 		} else if (STARTSWITH("mtllib ")) {
 			// parse the mtl file name
@@ -184,31 +211,31 @@ void SceneObject::_loadOBJ(const char *filename) {
 #undef STARTSWITH
 	}
 	
-	for (unsigned int i = 0; i < vertexIndices.size(); i++) {
-		unsigned int vertexIndex = vertexIndices[i];
-		Vertex vertex;
-		
-		glm::vec3 vert = verts[vertexIndex];
-		vertex.position = glm::vec4(vert, 1.0);
-		
-		glm::vec2 uv = uvs[vertexIndex];
-		vertex.texcoords = uv;
-		
-		glm::vec3 normal = normals[vertexIndex];
-		vertex.normal = normal;
-
-		vertex.colour = RED;
-		
-		vertex.lighting = glm::vec4(0.2, 0.8, 1.0, 100.0);
-		
-		vertices.push_back(vertex);
-	}
-	
 #if DEBUG
 	cout << "\tRead " << verts.size() << " vertices" << endl;
 	cout << "\tRead " << uvs.size() << " UVs" << endl;
 	cout << "\tRead " << normals.size() << " normals" << endl;
 #endif
+	
+	for (unsigned int i = 0; i < vertexIndices.size(); i++) {
+		unsigned int vertexIndex = vertexIndices[i];
+		Vertex vertex;
+		
+		vec3 vert = verts[vertexIndex - 1];
+		vertex.position = glm::vec4(vert, 1.0);
+		
+		vec2 uv = uvs[vertexIndex - 1];
+		vertex.texcoords = uv;
+		
+		vec3 normal = normals[vertexIndex - 1];
+		vertex.normal = normal;
+
+		vertex.colour = RED;
+		vertex.lighting = glm::vec4(0.2, 0.8, 1.0, 100.0);
+		vertex.texture = -1;
+		
+		vertices.push_back(vertex);
+	}
 	
 	cout << "Read object " << filename << endl;
 	fin.close();

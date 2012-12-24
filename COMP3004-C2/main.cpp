@@ -23,6 +23,7 @@
 #include "shaders.h"
 #include "utils.h"
 #include "SceneObject.h"
+#include "Skybox.h"
 
 using namespace glm;
 using namespace std;
@@ -33,7 +34,6 @@ void GLFWCALL keyHandler(int key, int action);
 void checkKeyHolds();
 void resetCameraPos1();
 
-GLuint vao;
 bool onTour = false;
 
 struct Camera {
@@ -65,6 +65,9 @@ int main(int argc, const char * argv[]) {
 	landscape->buffer();
 	sceneObjects.push_back(landscape);
 	
+	Skybox *skybox = new Skybox("mars");
+	skybox->buffer();
+	sceneObjects.push_back(skybox);
 	
 	vec3 sun = vec3(0.0, 100.0, 0.0);
 	sceneLights.push_back(sun);
@@ -119,9 +122,6 @@ void init() {
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
 	
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-	
 	glfwSetKeyCallback(keyHandler);
 	
 	resetCameraPos1();
@@ -133,7 +133,8 @@ void render(int frame, vector<SceneObject *> sceneObjects, vector<glm::vec3> sce
 	mat4 model = mat4(1.0f);
 	
 	camera.location = camera.location + camera.movement;
-	camera.focus = camera.focus + camera.movement;
+//	camera.focus = camera.focus + camera.movement;
+	camera.focus = vec3(cosf(camera.rotation/180 * 3.141592654f), 0.0, sinf(camera.rotation/180 * 3.141592654f)) + camera.location;
 	camera.rotation += camera.rotationSpeed;
 	
 	mat4 view = lookAt(camera.location, camera.focus, camera.up);
@@ -213,11 +214,13 @@ void checkKeyHolds() {
 	}
 	if (GLFW_TEST_KEY(GLFW_KEY_UP)) {
 		// Increase forward speed of camera
-		camera.movement.z = -MOVEMENT_SPEED;
+		camera.movement.x = sinf(camera.rotation/180 * 3.141592654f) * MOVEMENT_SPEED;
+		camera.movement.z = cosf(camera.rotation/180 * 3.141592654f) * MOVEMENT_SPEED;
 	}
 	if (GLFW_TEST_KEY(GLFW_KEY_DOWN)) {
 		// Decrease forward speed of camera (no reverse!)
-		camera.movement.z = MOVEMENT_SPEED;
+		camera.movement.x = sinf(camera.rotation/180 * 3.141592654f) * -MOVEMENT_SPEED;
+		camera.movement.z = cosf(camera.rotation/180 * 3.141592654f) * -MOVEMENT_SPEED;
 	}
 	if (GLFW_TEST_KEY(GLFW_KEY_SPACE)) {
 		// Stop
@@ -241,7 +244,7 @@ void checkKeyHolds() {
 
 void resetCameraPos1() {
 	camera.location =	vec3(0.0, 20.0, 3.0);
-	camera.focus =		vec3(0.0, 19.0, 0.0);
+//	camera.focus =		vec3(1.0, 0.0, 0.0);
 	camera.up =			vec3(0.0, 1.0, 0.0);
 	camera.movement =	vec3(0.0, 0.0, 0.0);
 	camera.rotation =	0.0;

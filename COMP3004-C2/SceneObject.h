@@ -9,6 +9,8 @@
 #ifndef __COMP3004_C2__SceneObject__
 #define __COMP3004_C2__SceneObject__
 
+#include "Texture.h"
+
 #include <iostream>
 #include <vector>
 
@@ -24,14 +26,18 @@ typedef struct {
 	glm::vec3 normal;
 	glm::vec2 texcoords;
 	glm::vec4 lighting; // Ambient, Diffuse, Specular, Shininess
+	GLuint texture;
 } Vertex;
 
-class SceneObject
-{
-
+class SceneObject {
 public:
+	std::vector<Vertex> vertices;
+	std::vector<Texture *> textures;
+	GLuint vertexBuffer, vertexArray;
+	bool smooth, wireframe;
+	
+	SceneObject();
     SceneObject(char const *objFilename, char const *mtlFilename);
-    ~SceneObject();
 	
 	void buffer();
 	void bind();
@@ -39,10 +45,6 @@ public:
 	void render();
 
 private:
-	std::vector<Vertex> vertices;
-	GLuint vertexBuffer;
-	bool smooth, wireframe;
-	
 	void _loadOBJ(char const *filename);
 };
 
