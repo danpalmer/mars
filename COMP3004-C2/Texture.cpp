@@ -29,20 +29,12 @@ Texture::Texture(char const *filename, int flags, bool repeat) {
 }
 
 void Texture::bind() {
-	bind(GL_TEXTURE0);
-}
-
-void Texture::bind(int textureUnit) {
-	glActiveTexture(textureUnit);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	check("Bound Texture");
 }
 
 void Texture::unbind() {
-	unbind(GL_TEXTURE0);
-}
-
-void Texture::unbind(int textureUnit) {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, NULL);
 	check("Unbound Texture");

@@ -11,7 +11,7 @@
 #include "utils.h"
 #include "Texture.h"
 
-#define DEFAULT_SIZE 1000.0
+#define DEFAULT_SIZE 10000.0
 #define PT (size / 2.0)
 
 using namespace glm;
@@ -30,9 +30,10 @@ Skybox::Skybox(char const *textureName) {
 void Skybox::render() {
 	bind();
 	
-	for (int i = 0; i < vertices.size()/6; i++) {
+	int vertsPerTexture = (int)vertices.size() / textures.size();
+	for (int i = 0; i < textures.size(); i++) {
 		textures[i]->bind();
-		glDrawArrays(GL_TRIANGLES, i*6, (i + 1) * 6);
+		glDrawArrays(GL_TRIANGLES, i * vertsPerTexture, vertsPerTexture);
 		textures[i]->unbind();
 	}
 	
@@ -57,24 +58,24 @@ void Skybox::init(float size, const char *textureName) {
 	
 	face = "_back.tga";
 	Texture *textureB = new Texture((texture + face).c_str(), 0, false);
-	vertices.push_back(skyboxVertex( PT,  PT, -PT, 1, 0, 1));
-	vertices.push_back(skyboxVertex(-PT,  PT, -PT, 1, 1, 1));
-	vertices.push_back(skyboxVertex(-PT, -PT, -PT, 1, 1, 0));
+	vertices.push_back(skyboxVertex( PT,  PT, -PT, 1, 1, 1));
+	vertices.push_back(skyboxVertex(-PT,  PT, -PT, 1, 0, 1));
+	vertices.push_back(skyboxVertex(-PT, -PT, -PT, 1, 0, 0));
 	
-	vertices.push_back(skyboxVertex(-PT, -PT, -PT, 1, 1, 0));
-	vertices.push_back(skyboxVertex( PT, -PT, -PT, 1, 0, 0));
-	vertices.push_back(skyboxVertex( PT,  PT, -PT, 1, 0, 1));
+	vertices.push_back(skyboxVertex(-PT, -PT, -PT, 1, 0, 0));
+	vertices.push_back(skyboxVertex( PT, -PT, -PT, 1, 1, 0));
+	vertices.push_back(skyboxVertex( PT,  PT, -PT, 1, 1, 1));
 	textures.push_back(textureB);
 
 	face = "_top.tga";
 	Texture *textureT = new Texture((texture + face).c_str(), 0, false);
-	vertices.push_back(skyboxVertex(-PT,  PT,  PT, 2, 0, 1));
-	vertices.push_back(skyboxVertex(-PT,  PT, -PT, 2, 0, 0));
-	vertices.push_back(skyboxVertex( PT,  PT, -PT, 2, 1, 0));
+	vertices.push_back(skyboxVertex(-PT,  PT, -PT, 2, 0, 1));
+	vertices.push_back(skyboxVertex( PT,  PT, -PT, 2, 0, 0));
+	vertices.push_back(skyboxVertex( PT,  PT,  PT, 2, 1, 0));
 	
-	vertices.push_back(skyboxVertex( PT,  PT, -PT, 2, 1, 0));
-	vertices.push_back(skyboxVertex( PT,  PT,  PT, 2, 1, 1));
-	vertices.push_back(skyboxVertex(-PT,  PT,  PT, 2, 0, 1));
+	vertices.push_back(skyboxVertex( PT,  PT,  PT, 2, 1, 0));
+	vertices.push_back(skyboxVertex(-PT,  PT,  PT, 2, 1, 1));
+	vertices.push_back(skyboxVertex(-PT,  PT, -PT, 2, 0, 1));
 	textures.push_back(textureT);
 
 	face = "_bottom.tga";

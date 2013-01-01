@@ -19,7 +19,7 @@ using namespace glm;
 #include "utils.h"
 
 SceneObject::SceneObject() {
-	smooth = false;
+	smooth = true;
 	wireframe = false;
 }
 
@@ -80,11 +80,23 @@ void SceneObject::unbind() {
 void SceneObject::render() {
 	bind();
 	
+	if (smooth) {
+		glEnable(GL_SMOOTH);
+	} else {
+		glEnable(GL_FLAT);
+	}
+	glGetError();
+	
 	glDrawArrays(wireframe ? GL_LINES : GL_TRIANGLES, 0, (GLsizei)vertices.size());
 	check("Rendered SceneObject");
 	
 	unbind();
 }
+
+typedef struct {
+	unsigned int vertexIndex[3] = {0}, uvIndex[3] = {0}, normalIndex[3] = {0};
+	bool uvs, normals;
+} Face;
 
 void SceneObject::_loadOBJ(const char *filename) {
 	
@@ -101,12 +113,13 @@ void SceneObject::_loadOBJ(const char *filename) {
 	vector<vec3> verts;
 	vector<vec2> uvs;
 	vector<vec3> normals;
-	
-	vector<int> vertexIndices, uvIndices, normalIndices;
+	vector<Face> faces;
 	
 	while (!fin.eof()) {
 		char buf[MAX_CHARS_PER_LINE];
 		fin.getline(buf, MAX_CHARS_PER_LINE);
+		
+		string line = buf;
 		
 #define STARTSWITH(str) (strncmp(str, buf, strlen(str)) == 0)
 		if (STARTSWITH("vn ")) {
@@ -141,29 +154,41 @@ void SceneObject::_loadOBJ(const char *filename) {
 			
 		} else if (STARTSWITH("f ")) {
 			// parse faces
-			unsigned int vertexIndex[3] = {0}, uvIndex[3] = {0}, normalIndex[3] = {0};
-			int matches = sscanf(buf, "f %d/%d/%d %d/%d/%d %d/%d/%d", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
-			if (matches == 0) {
-				matches = sscanf(buf, "f %d/%d %d/%d %d/%d", &vertexIndex[0], &uvIndex[0], &vertexIndex[1], &uvIndex[1], &vertexIndex[2], &uvIndex[2]);
-			}
-			if (matches == 0) {
-				matches = sscanf(buf, "f %d//%d %d//%d %d//%d", &vertexIndex[0], &normalIndex[0], &vertexIndex[1], &normalIndex[1], &vertexIndex[2], &normalIndex[2]);
-			}
-			if (matches == 0) {
-				cout << "Failed to parse face" << endl;
+			Face face;
+			
+			int matches = sscanf(buf, "f %d %d %d", &face.vertexIndex[0], &face.vertexIndex[1], &face.vertexIndex[2]);
+			if (matches == 3) {
+				face.normals = false;
+				face.uvs = false;
+				faces.push_back(face);
 				continue;
 			}
 			
-			vertexIndices.push_back(vertexIndex[0]);
-			vertexIndices.push_back(vertexIndex[1]);
-			vertexIndices.push_back(vertexIndex[2]);
-			uvIndices.push_back(uvIndex[0]);
-			uvIndices.push_back(uvIndex[1]);
-			uvIndices.push_back(uvIndex[2]);
-			normalIndices.push_back(normalIndex[0]);
-			normalIndices.push_back(normalIndex[1]);
-			normalIndices.push_back(normalIndex[2]);
+			matches = sscanf(buf, "f %d/%d/%d %d/%d/%d %d/%d/%d", &face.vertexIndex[0], &face.uvIndex[0], &face.normalIndex[0], &face.vertexIndex[1], &face.uvIndex[1], &face.normalIndex[1], &face.vertexIndex[2], &face.uvIndex[2], &face.normalIndex[2]);
+			if (matches == 9) {
+				face.normals = true;
+				face.uvs = true;
+				faces.push_back(face);
+				continue;
+			}
 			
+			matches = sscanf(buf, "f %d/%d %d/%d %d/%d", &face.vertexIndex[0], &face.uvIndex[0], &face.vertexIndex[1], &face.uvIndex[1], &face.vertexIndex[2], &face.uvIndex[2]);
+			if (matches == 6) {
+				face.normals = false;
+				face.uvs = true;
+				faces.push_back(face);
+				continue;
+			}
+			
+			matches = sscanf(buf, "f %d//%d %d//%d %d//%d", &face.vertexIndex[0], &face.normalIndex[0], &face.vertexIndex[1], &face.normalIndex[1], &face.vertexIndex[2], &face.normalIndex[2]);
+			if (matches > 0) {
+				face.normals = true;
+				face.uvs = false;
+				faces.push_back(face);
+				continue;
+			}
+			
+			cout << "Failed to parse face" << endl;
 		} else if (STARTSWITH("mtllib ")) {
 			// parse the mtl file name
 			
@@ -200,26 +225,33 @@ void SceneObject::_loadOBJ(const char *filename) {
 	cout << "\tRead " << verts.size() << " vertices" << endl;
 	cout << "\tRead " << uvs.size() << " UVs" << endl;
 	cout << "\tRead " << normals.size() << " normals" << endl;
+	cout << "\tRead " << faces.size() << " faces" << endl;
 #endif
 	
-	for (unsigned int i = 0; i < vertexIndices.size(); i++) {
-		unsigned int vertexIndex = vertexIndices[i];
-		Vertex vertex;
-		
-		vec3 vert = verts[vertexIndex - 1];
-		vertex.position = glm::vec4(vert, 1.0);
-		
-		vec2 uv = uvs[vertexIndex - 1];
-		vertex.texcoords = uv;
-		
-		vec3 normal = normals[vertexIndex - 1];
-		vertex.normal = normal;
-
-		vertex.colour = RED;
-		vertex.lighting = glm::vec4(0.2, 0.8, 1.0, 100.0);
-		vertex.texture = -1;
-		
-		vertices.push_back(vertex);
+	for (unsigned int i = 0; i < faces.size(); i++) {
+		Face face = faces[i];
+		for (int v = 0; v < 3; v++) {
+			Vertex vertex;
+			
+			vec3 vert = verts[face.vertexIndex[v] - 1];
+			vertex.position = glm::vec4(vert, 1.0);
+			
+			if (face.uvs) {
+				vec2 uv = uvs[face.uvIndex[v] - 1];
+				vertex.texcoords = uv;
+			}
+			
+			if (face.normals) {
+				vec3 normal = normals[face.normalIndex[v] - 1];
+				vertex.normal = normal;
+			}
+			
+			vertex.colour = glm::vec4(0.5940, 0.2100, 0.0588, 1);
+			vertex.lighting = glm::vec4(0.2, 0.8, 1.0, 100.0);
+			vertex.texture = -1;
+			
+			vertices.push_back(vertex);
+		}
 	}
 	
 	cout << "Read object " << filename << endl;

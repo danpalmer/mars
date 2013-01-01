@@ -65,6 +65,10 @@ int main(int argc, const char * argv[]) {
 	landscape->buffer();
 	sceneObjects.push_back(landscape);
 	
+//	SceneObject *plane = new SceneObject("teapot.obj", "");
+//	plane->buffer();
+//	sceneObjects.push_back(plane);
+	
 	Skybox *skybox = new Skybox("mars");
 	skybox->buffer();
 	sceneObjects.push_back(skybox);

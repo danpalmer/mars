@@ -15,6 +15,7 @@
 		374C5A7F16889C8000C56E78 /* mars_left.tga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 374C5A7916889C7100C56E78 /* mars_left.tga */; };
 		374C5A8016889C8000C56E78 /* mars_right.tga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 374C5A7A16889C7100C56E78 /* mars_right.tga */; };
 		374C5A8116889C8000C56E78 /* mars_top.tga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 374C5A7B16889C7100C56E78 /* mars_top.tga */; };
+		37B293CD16933B2600430137 /* teapot.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 37B293CC16933B0900430137 /* teapot.obj */; };
 		37F552DA168269EA004CB411 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37F552D9168269EA004CB411 /* main.cpp */; };
 		37F552E316826A1A004CB411 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37F552E216826A1A004CB411 /* OpenGL.framework */; };
 		37F552E916826F4F004CB411 /* shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37F552E716826F4F004CB411 /* shaders.cpp */; };
@@ -32,6 +33,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				37B293CD16933B2600430137 /* teapot.obj in CopyFiles */,
 				374C5A7C16889C8000C56E78 /* mars_back.tga in CopyFiles */,
 				374C5A7D16889C8000C56E78 /* mars_bottom.tga in CopyFiles */,
 				374C5A7E16889C8000C56E78 /* mars_front.tga in CopyFiles */,
@@ -57,6 +59,7 @@
 		374C5A7916889C7100C56E78 /* mars_left.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = mars_left.tga; sourceTree = "<group>"; };
 		374C5A7A16889C7100C56E78 /* mars_right.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = mars_right.tga; sourceTree = "<group>"; };
 		374C5A7B16889C7100C56E78 /* mars_top.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = mars_top.tga; sourceTree = "<group>"; };
+		37B293CC16933B0900430137 /* teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = teapot.obj; sourceTree = "<group>"; };
 		37F552D5168269EA004CB411 /* COMP3004-C2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "COMP3004-C2"; sourceTree = BUILT_PRODUCTS_DIR; };
 		37F552D9168269EA004CB411 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		37F552E216826A1A004CB411 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -141,6 +144,7 @@
 				374C5A7916889C7100C56E78 /* mars_left.tga */,
 				374C5A7A16889C7100C56E78 /* mars_right.tga */,
 				374C5A7B16889C7100C56E78 /* mars_top.tga */,
+				37B293CC16933B0900430137 /* teapot.obj */,
 			);
 			name = Resources;
 			sourceTree = "<group>";

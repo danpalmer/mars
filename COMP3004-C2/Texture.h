@@ -26,9 +26,7 @@ public:
 	Texture(char const *filename, int flags, bool repeat);
 	
 	void bind();
-	void bind(int textureUnit);
 	void unbind();
-	void unbind(int textureUnit);
 
 };
 
