@@ -27,6 +27,20 @@ Skybox::Skybox(char const *textureName) {
 	init(DEFAULT_SIZE, textureName);
 }
 
+void Skybox::render() {
+	bind();
+	
+	for (int i = 0; i < vertices.size()/6; i++) {
+		textures[i]->bind();
+		glDrawArrays(GL_TRIANGLES, i*6, (i + 1) * 6);
+		textures[i]->unbind();
+	}
+	
+	check("Rendered SceneObject");
+	
+	unbind();
+}
+
 void Skybox::init(float size, const char *textureName) {
 	string texture = textureName, face;
 	
@@ -41,20 +55,60 @@ void Skybox::init(float size, const char *textureName) {
 	vertices.push_back(skyboxVertex(-PT, -PT,  PT, 0, 1, 0));
 	textures.push_back(textureF);
 	
-//	face = "_back.tga";
-//	Texture *textureB = new Texture((texture + face).c_str(), 0, false);
-//	
-//	face = "_top.tga";
-//	Texture *textureT = new Texture((texture + face).c_str(), 0, false);
-//	
-//	face = "_bottom.tga";
-//	Texture *textureBt = new Texture((texture + face).c_str(), 0, false);
-//	
-//	face = "_left.tga";
-//	Texture *textureL = new Texture((texture + face).c_str(), 0, false);
-//	
-//	face = "_right.tga";
-//	Texture *textureR = new Texture((texture + face).c_str(), 0, false);
+	face = "_back.tga";
+	Texture *textureB = new Texture((texture + face).c_str(), 0, false);
+	vertices.push_back(skyboxVertex( PT,  PT, -PT, 1, 0, 1));
+	vertices.push_back(skyboxVertex(-PT,  PT, -PT, 1, 1, 1));
+	vertices.push_back(skyboxVertex(-PT, -PT, -PT, 1, 1, 0));
+	
+	vertices.push_back(skyboxVertex(-PT, -PT, -PT, 1, 1, 0));
+	vertices.push_back(skyboxVertex( PT, -PT, -PT, 1, 0, 0));
+	vertices.push_back(skyboxVertex( PT,  PT, -PT, 1, 0, 1));
+	textures.push_back(textureB);
+
+	face = "_top.tga";
+	Texture *textureT = new Texture((texture + face).c_str(), 0, false);
+	vertices.push_back(skyboxVertex(-PT,  PT,  PT, 2, 0, 1));
+	vertices.push_back(skyboxVertex(-PT,  PT, -PT, 2, 0, 0));
+	vertices.push_back(skyboxVertex( PT,  PT, -PT, 2, 1, 0));
+	
+	vertices.push_back(skyboxVertex( PT,  PT, -PT, 2, 1, 0));
+	vertices.push_back(skyboxVertex( PT,  PT,  PT, 2, 1, 1));
+	vertices.push_back(skyboxVertex(-PT,  PT,  PT, 2, 0, 1));
+	textures.push_back(textureT);
+
+	face = "_bottom.tga";
+	Texture *textureBt = new Texture((texture + face).c_str(), 0, false);
+	vertices.push_back(skyboxVertex( PT, -PT,  PT, 3, 1, 1));
+	vertices.push_back(skyboxVertex( PT, -PT, -PT, 3, 0, 1));
+	vertices.push_back(skyboxVertex(-PT, -PT, -PT, 3, 0, 0));
+	
+	vertices.push_back(skyboxVertex(-PT, -PT, -PT, 3, 0, 0));
+	vertices.push_back(skyboxVertex(-PT, -PT,  PT, 3, 1, 0));
+	vertices.push_back(skyboxVertex( PT, -PT,  PT, 3, 1, 1));
+	textures.push_back(textureBt);
+
+	face = "_left.tga";
+	Texture *textureL = new Texture((texture + face).c_str(), 0, false);
+	vertices.push_back(skyboxVertex(-PT,  PT, -PT, 4, 1, 1));
+	vertices.push_back(skyboxVertex(-PT,  PT,  PT, 4, 0, 1));
+	vertices.push_back(skyboxVertex(-PT, -PT,  PT, 4, 0, 0));
+	
+	vertices.push_back(skyboxVertex(-PT, -PT,  PT, 4, 0, 0));
+	vertices.push_back(skyboxVertex(-PT, -PT, -PT, 4, 1, 0));
+	vertices.push_back(skyboxVertex(-PT,  PT, -PT, 4, 1, 1));
+	textures.push_back(textureL);
+	
+	face = "_right.tga";
+	Texture *textureR = new Texture((texture + face).c_str(), 0, false);
+	vertices.push_back(skyboxVertex( PT, -PT, -PT, 5, 0, 0));
+	vertices.push_back(skyboxVertex( PT, -PT,  PT, 5, 1, 0));
+	vertices.push_back(skyboxVertex( PT,  PT,  PT, 5, 1, 1));
+	
+	vertices.push_back(skyboxVertex( PT,  PT,  PT, 5, 1, 1));
+	vertices.push_back(skyboxVertex( PT,  PT, -PT, 5, 0, 1));
+	vertices.push_back(skyboxVertex( PT, -PT, -PT, 5, 0, 0));
+	textures.push_back(textureR);
 	
 	check("Created Skybox");
 }

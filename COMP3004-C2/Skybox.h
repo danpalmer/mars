@@ -31,6 +31,8 @@ public:
 	Skybox(char const *textureName);
 	Skybox(float size, char const *textureName);
 	
+	void render();
+	
 private:
 	void init(float size, char const *textureName);
 };

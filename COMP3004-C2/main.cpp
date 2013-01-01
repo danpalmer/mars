@@ -129,15 +129,14 @@ void init() {
 
 void render(int frame, vector<SceneObject *> sceneObjects, vector<glm::vec3> sceneLights, GLuint shader) {
 	
-	mat4 perspective = glm::perspective(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
+	mat4 perspective = glm::perspective(45.0f, 16.0f/9.0f, 0.1f, 10000.0f);
 	mat4 model = mat4(1.0f);
 	
 	camera.location = camera.location + camera.movement;
-//	camera.focus = camera.focus + camera.movement;
-	camera.focus = vec3(cosf(camera.rotation/180 * 3.141592654f), 0.0, sinf(camera.rotation/180 * 3.141592654f)) + camera.location;
+	vec3 centre = vec3(cosf(camera.rotation/180 * 3.141592654f), 0.0, sinf(camera.rotation/180 * 3.141592654f)) + camera.location;
 	camera.rotation += camera.rotationSpeed;
 	
-	mat4 view = lookAt(camera.location, camera.focus, camera.up);
+	mat4 view = lookAt(camera.location, centre, camera.up);
 	view = rotate(view, camera.rotation, vec3(0.0, 1.0, 0.0));
 	
 	glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -214,13 +213,13 @@ void checkKeyHolds() {
 	}
 	if (GLFW_TEST_KEY(GLFW_KEY_UP)) {
 		// Increase forward speed of camera
-		camera.movement.x = sinf(camera.rotation/180 * 3.141592654f) * MOVEMENT_SPEED;
-		camera.movement.z = cosf(camera.rotation/180 * 3.141592654f) * MOVEMENT_SPEED;
+		camera.movement.x = cosf(camera.rotation / 180 * 3.141592654f) * MOVEMENT_SPEED;
+		camera.movement.z = sinf(camera.rotation / 180 * 3.141592654f) * MOVEMENT_SPEED;
 	}
 	if (GLFW_TEST_KEY(GLFW_KEY_DOWN)) {
 		// Decrease forward speed of camera (no reverse!)
-		camera.movement.x = sinf(camera.rotation/180 * 3.141592654f) * -MOVEMENT_SPEED;
-		camera.movement.z = cosf(camera.rotation/180 * 3.141592654f) * -MOVEMENT_SPEED;
+		camera.movement.x = cosf(camera.rotation / 180 * 3.141592654f) * -MOVEMENT_SPEED;
+		camera.movement.z = sinf(camera.rotation / 180 * 3.141592654f) * -MOVEMENT_SPEED;
 	}
 	if (GLFW_TEST_KEY(GLFW_KEY_SPACE)) {
 		// Stop
@@ -244,7 +243,7 @@ void checkKeyHolds() {
 
 void resetCameraPos1() {
 	camera.location =	vec3(0.0, 20.0, 3.0);
-//	camera.focus =		vec3(1.0, 0.0, 0.0);
+	camera.focus =		vec3(0.0, 0.0, 0.0);
 	camera.up =			vec3(0.0, 1.0, 0.0);
 	camera.movement =	vec3(0.0, 0.0, 0.0);
 	camera.rotation =	0.0;

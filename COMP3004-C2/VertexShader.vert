@@ -5,7 +5,6 @@ layout(location = 1) in vec4 colour;
 layout(location = 2) in vec3 normal;
 layout(location = 3) in vec2 texcoords;
 layout(location = 4) in vec4 lighting;
-layout(location = 5) in int texture;
 
 uniform mat4 perspective;
 uniform mat4 model;
@@ -16,8 +15,7 @@ uniform int lightcount;
 uniform vec3 lightpos[MAXLIGHTS];
 uniform vec3 camerapos;
 
-const int MAXTEXTURES = 6;
-uniform sampler2D textures[MAXTEXTURES];
+uniform sampler2D texture;
 
 out Attributes {
 	vec4 position;
@@ -25,7 +23,6 @@ out Attributes {
 	vec3 normal;
 	vec2 texcoords;
 	vec4 lighting;
-	flat int texture;
 } attribs;
 
 //out int out_lightcount;
@@ -40,7 +37,6 @@ void main(void) {
 	attribs.normal = normal;
 	attribs.texcoords = texcoords;
 	attribs.lighting = lighting;
-	attribs.texture = texture;
 	
 	gl_Position = attribs.position;
 	

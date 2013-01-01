@@ -53,7 +53,6 @@ void SceneObject::bind() {
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), VERTEX_OFFSETOF(normal));
 	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), VERTEX_OFFSETOF(texcoords));
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), VERTEX_OFFSETOF(lighting));
-	glVertexAttribPointer(5, 1, GL_INT, GL_FALSE, sizeof(Vertex), VERTEX_OFFSETOF(texture));
 #undef VERTEX_OFFSETOF
 	
 	glEnableVertexAttribArray(0);
@@ -61,31 +60,17 @@ void SceneObject::bind() {
 	glEnableVertexAttribArray(2);
 	glEnableVertexAttribArray(3);
 	glEnableVertexAttribArray(4);
-	glEnableVertexAttribArray(5);
 	
 	check("Bound SceneObject");
-	
-	for (int i = 0; i < textures.size(); i++) {
-		textures[i]->bind(GL_TEXTURE0 + i);
-	}
-	
-	check("Bound Textures for SceneObject");
 }
 
 void SceneObject::unbind() {
-	
-	for (int i = 0; i < textures.size(); i++) {
-		textures[i]->unbind(GL_TEXTURE0 + i);
-	}
-	
-	check("Unbound Textured for SceneObject");
 	
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 	glDisableVertexAttribArray(3);
 	glDisableVertexAttribArray(4);
-	glDisableVertexAttribArray(5);
 	
 	glBindVertexArray(0);
 	

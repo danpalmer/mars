@@ -42,7 +42,7 @@ public:
 	void buffer();
 	void bind();
 	void unbind();
-	void render();
+	virtual void render();
 
 private:
 	void _loadOBJ(char const *filename);
