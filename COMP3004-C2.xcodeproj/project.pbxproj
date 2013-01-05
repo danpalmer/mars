@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3732B6391697330B000C63A8 /* bases.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3732B634169732F2000C63A8 /* bases.obj */; };
+		3732B63A1697330B000C63A8 /* bridge.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3732B635169732F2000C63A8 /* bridge.obj */; };
+		3732B63B1697330B000C63A8 /* buildings.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3732B636169732F2000C63A8 /* buildings.obj */; };
+		3732B63C1697330B000C63A8 /* foundation.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3732B637169732F2000C63A8 /* foundation.obj */; };
 		374C5A651688790800C56E78 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 374C5A631688790800C56E78 /* Texture.cpp */; };
 		374C5A7516887B6A00C56E78 /* Skybox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 374C5A7316887B6A00C56E78 /* Skybox.cpp */; };
 		374C5A7C16889C8000C56E78 /* mars_back.tga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 374C5A7616889C7100C56E78 /* mars_back.tga */; };
@@ -16,6 +20,8 @@
 		374C5A8016889C8000C56E78 /* mars_right.tga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 374C5A7A16889C7100C56E78 /* mars_right.tga */; };
 		374C5A8116889C8000C56E78 /* mars_top.tga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 374C5A7B16889C7100C56E78 /* mars_top.tga */; };
 		37B293CD16933B2600430137 /* teapot.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 37B293CC16933B0900430137 /* teapot.obj */; };
+		37B293D31695C7CD00430137 /* controls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37B293D11695C7CD00430137 /* controls.cpp */; };
+		37B293D61695F61E00430137 /* ground_texture.tga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 37B293D51695F60D00430137 /* ground_texture.tga */; };
 		37F552DA168269EA004CB411 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37F552D9168269EA004CB411 /* main.cpp */; };
 		37F552E316826A1A004CB411 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37F552E216826A1A004CB411 /* OpenGL.framework */; };
 		37F552E916826F4F004CB411 /* shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37F552E716826F4F004CB411 /* shaders.cpp */; };
@@ -33,6 +39,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				3732B6391697330B000C63A8 /* bases.obj in CopyFiles */,
+				3732B63A1697330B000C63A8 /* bridge.obj in CopyFiles */,
+				3732B63B1697330B000C63A8 /* buildings.obj in CopyFiles */,
+				3732B63C1697330B000C63A8 /* foundation.obj in CopyFiles */,
+				37B293D61695F61E00430137 /* ground_texture.tga in CopyFiles */,
 				37B293CD16933B2600430137 /* teapot.obj in CopyFiles */,
 				374C5A7C16889C8000C56E78 /* mars_back.tga in CopyFiles */,
 				374C5A7D16889C8000C56E78 /* mars_bottom.tga in CopyFiles */,
@@ -49,6 +60,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3732B634169732F2000C63A8 /* bases.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = bases.obj; sourceTree = "<group>"; };
+		3732B635169732F2000C63A8 /* bridge.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = bridge.obj; sourceTree = "<group>"; };
+		3732B636169732F2000C63A8 /* buildings.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = buildings.obj; sourceTree = "<group>"; };
+		3732B637169732F2000C63A8 /* foundation.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = foundation.obj; sourceTree = "<group>"; };
 		374C5A631688790800C56E78 /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture.cpp; sourceTree = "<group>"; };
 		374C5A641688790800C56E78 /* Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Texture.h; sourceTree = "<group>"; };
 		374C5A7316887B6A00C56E78 /* Skybox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Skybox.cpp; sourceTree = "<group>"; };
@@ -60,6 +75,9 @@
 		374C5A7A16889C7100C56E78 /* mars_right.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = mars_right.tga; sourceTree = "<group>"; };
 		374C5A7B16889C7100C56E78 /* mars_top.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = mars_top.tga; sourceTree = "<group>"; };
 		37B293CC16933B0900430137 /* teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = teapot.obj; sourceTree = "<group>"; };
+		37B293D11695C7CD00430137 /* controls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = controls.cpp; sourceTree = "<group>"; };
+		37B293D21695C7CD00430137 /* controls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = controls.h; sourceTree = "<group>"; };
+		37B293D51695F60D00430137 /* ground_texture.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = ground_texture.tga; sourceTree = "<group>"; };
 		37F552D5168269EA004CB411 /* COMP3004-C2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "COMP3004-C2"; sourceTree = BUILT_PRODUCTS_DIR; };
 		37F552D9168269EA004CB411 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		37F552E216826A1A004CB411 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -108,6 +126,8 @@
 			isa = PBXGroup;
 			children = (
 				37F552D9168269EA004CB411 /* main.cpp */,
+				37B293D11695C7CD00430137 /* controls.cpp */,
+				37B293D21695C7CD00430137 /* controls.h */,
 				37F552E716826F4F004CB411 /* shaders.cpp */,
 				37F552E816826F4F004CB411 /* shaders.h */,
 				37F552EA16827160004CB411 /* utils.cpp */,
@@ -137,7 +157,12 @@
 		37FD94771684C95D00716C5A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3732B634169732F2000C63A8 /* bases.obj */,
+				3732B635169732F2000C63A8 /* bridge.obj */,
+				3732B636169732F2000C63A8 /* buildings.obj */,
+				3732B637169732F2000C63A8 /* foundation.obj */,
 				37FD94781684C96800716C5A /* mars-landscape.obj */,
+				37B293D51695F60D00430137 /* ground_texture.tga */,
 				374C5A7616889C7100C56E78 /* mars_back.tga */,
 				374C5A7716889C7100C56E78 /* mars_bottom.tga */,
 				374C5A7816889C7100C56E78 /* mars_front.tga */,
@@ -206,6 +231,7 @@
 				37F5551216833C50004CB411 /* SceneObject.cpp in Sources */,
 				374C5A651688790800C56E78 /* Texture.cpp in Sources */,
 				374C5A7516887B6A00C56E78 /* Skybox.cpp in Sources */,
+				37B293D31695C7CD00430137 /* controls.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

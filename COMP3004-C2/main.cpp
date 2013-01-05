@@ -20,6 +20,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "controls.h"
 #include "shaders.h"
 #include "utils.h"
 #include "SceneObject.h"
@@ -32,19 +33,12 @@ void init();
 void render(int frame, vector<SceneObject *> sceneObjects, vector<glm::vec3> sceneLights, GLuint shader);
 void GLFWCALL keyHandler(int key, int action);
 void checkKeyHolds();
-void resetCameraPos1();
+void initSceneObjects();
 
 bool onTour = false;
 
-struct Camera {
-	vec3 location;
-	vec3 focus;
-	vec3 up;
-	vec3 movement;
-	float rotation;
-	float rotationSpeed;
-};
-struct Camera camera;
+Camera *camera = new Camera();
+vector<SceneObject *> sceneObjects;
 
 int main(int argc, const char * argv[]) {
 	int running = GL_TRUE;
@@ -54,26 +48,13 @@ int main(int argc, const char * argv[]) {
 	shaders.push_back(setupShader("VertexShader.vert", GL_VERTEX_SHADER));
 	shaders.push_back(setupShader("FragmentShader.frag", GL_FRAGMENT_SHADER));
 	
-	vector<vec3> sceneLights;
-	vector<SceneObject *> sceneObjects;
-	
 	GLuint shader = linkShaders(shaders);
 	glUseProgram(shader);
 	check("Setup Shaders");
 	
-	SceneObject *landscape = new SceneObject("mars-landscape.obj", "");
-	landscape->buffer();
-	sceneObjects.push_back(landscape);
-	
-//	SceneObject *plane = new SceneObject("teapot.obj", "");
-//	plane->buffer();
-//	sceneObjects.push_back(plane);
-	
-	Skybox *skybox = new Skybox("mars");
-	skybox->buffer();
-	sceneObjects.push_back(skybox);
-	
-	vec3 sun = vec3(0.0, 100.0, 0.0);
+	initSceneObjects();
+	vector<vec3> sceneLights;
+	vec3 sun = vec3(-5000.0, 5000.0, 5000.0);
 	sceneLights.push_back(sun);
 	
 	int i = 0;
@@ -85,8 +66,7 @@ int main(int argc, const char * argv[]) {
 			i++;
 		}
 		
-		checkKeyHolds();
-		
+		camera->computeMatricesFromInputs();
 		render(i, sceneObjects, sceneLights, shader);
 		
 		glFlush();
@@ -126,22 +106,16 @@ void init() {
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
 	
-	glfwSetKeyCallback(keyHandler);
+	glfwDisable(GLFW_MOUSE_CURSOR);
 	
-	resetCameraPos1();
+	glfwSetKeyCallback(keyHandler);
 }
 
-void render(int frame, vector<SceneObject *> sceneObjects, vector<glm::vec3> sceneLights, GLuint shader) {
+void render(int frame, vector<SceneObject *> sceneObjects, vector<vec3> sceneLights, GLuint shader) {
 	
-	mat4 perspective = glm::perspective(45.0f, 16.0f/9.0f, 0.1f, 10000.0f);
+	mat4 perspective = camera->getProjectionMatrix();
 	mat4 model = mat4(1.0f);
-	
-	camera.location = camera.location + camera.movement;
-	vec3 centre = vec3(cosf(camera.rotation/180 * 3.141592654f), 0.0, sinf(camera.rotation/180 * 3.141592654f)) + camera.location;
-	camera.rotation += camera.rotationSpeed;
-	
-	mat4 view = lookAt(camera.location, centre, camera.up);
-	view = rotate(view, camera.rotation, vec3(0.0, 1.0, 0.0));
+	mat4 view = camera->getViewMatrix();
 	
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -151,16 +125,17 @@ void render(int frame, vector<SceneObject *> sceneObjects, vector<glm::vec3> sce
 	glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, value_ptr(view));
 	
 	glUniform1i(glGetUniformLocation(shader, "lightcount"), (GLint)sceneLights.size());
-	glUniform3fv(glGetUniformLocation(shader, "lightpos"), sizeof(glm::vec3), &sceneLights[0][0]);
-	glUniform3fv(glGetUniformLocation(shader, "camerapos"), 1, value_ptr(camera.location));
+	glUniform3fv(glGetUniformLocation(shader, "lightpos"), 1, value_ptr(sceneLights[0]));
+	vec3 camerapos = camera->getPosition();
+	glUniform3fv(glGetUniformLocation(shader, "camerapos"), 1, value_ptr(camerapos));
 	
 	for (int i = 0; i < sceneObjects.size(); i++) {
+		glUniform1i(glGetUniformLocation(shader, "surface"), (GLint)sceneObjects[i]->surfaceType);
 		sceneObjects[i]->render();
 	}
 }
 
 #define TEST_KEY(k) (key == k || key == (k + 32))
-#define GLFW_TEST_KEY(k) (glfwGetKey(k) == GLFW_PRESS)
 void GLFWCALL keyHandler(int key, int action) {
 	if (action != GLFW_PRESS) return;
 	
@@ -194,62 +169,38 @@ void GLFWCALL keyHandler(int key, int action) {
 		// Reset all animation
 	}
 }
-
-void checkKeyHolds() {
-	if (onTour) {
-		return;
-	}
-	
-	camera.movement = vec3(0.0, 0.0, 0.0);
-	camera.rotationSpeed = 0.0;
-	
-#define TURNING_SPEED 2.0
-#define MOVEMENT_SPEED 1.0
-	
-	// Movement
-	if (GLFW_TEST_KEY(GLFW_KEY_LEFT)) {
-		// Turn left
-		camera.rotationSpeed = -TURNING_SPEED;
-	}
-	if (GLFW_TEST_KEY(GLFW_KEY_RIGHT)) {
-		// Turn right
-		camera.rotationSpeed = TURNING_SPEED;
-	}
-	if (GLFW_TEST_KEY(GLFW_KEY_UP)) {
-		// Increase forward speed of camera
-		camera.movement.x = cosf(camera.rotation / 180 * 3.141592654f) * MOVEMENT_SPEED;
-		camera.movement.z = sinf(camera.rotation / 180 * 3.141592654f) * MOVEMENT_SPEED;
-	}
-	if (GLFW_TEST_KEY(GLFW_KEY_DOWN)) {
-		// Decrease forward speed of camera (no reverse!)
-		camera.movement.x = cosf(camera.rotation / 180 * 3.141592654f) * -MOVEMENT_SPEED;
-		camera.movement.z = sinf(camera.rotation / 180 * 3.141592654f) * -MOVEMENT_SPEED;
-	}
-	if (GLFW_TEST_KEY(GLFW_KEY_SPACE)) {
-		// Stop
-		camera.movement = vec3(0.0, 0.0, 0.0);
-		camera.rotationSpeed = 0.0;
-	}
-	if (GLFW_TEST_KEY(GLFW_KEY_PAGEUP) || (GLFW_TEST_KEY(GLFW_KEY_SPECIAL) && GLFW_TEST_KEY(GLFW_KEY_UP))) {
-		// Increase elevation of camera
-		camera.movement.y = MOVEMENT_SPEED;
-	}
-	if (GLFW_TEST_KEY(GLFW_KEY_PAGEDOWN) || (GLFW_TEST_KEY(GLFW_KEY_SPECIAL) && GLFW_TEST_KEY(GLFW_KEY_DOWN))) {
-		// Decrease elevation of camera
-		camera.movement.y = -MOVEMENT_SPEED;
-	}
-	
-#undef TURNING_SPEED
-#undef MOVEMENT_SPEED
-}
 #undef TEST_KEY
-#undef GLFW_TEST_KEY
 
-void resetCameraPos1() {
-	camera.location =	vec3(0.0, 20.0, 3.0);
-	camera.focus =		vec3(0.0, 0.0, 0.0);
-	camera.up =			vec3(0.0, 1.0, 0.0);
-	camera.movement =	vec3(0.0, 0.0, 0.0);
-	camera.rotation =	0.0;
-	camera.rotationSpeed = 0.0;
+void initSceneObjects() {
+	
+	SceneObject *landscape = new SceneObject("mars-landscape.obj");
+	landscape->texture = new Texture("ground_texture.tga", 0, true);
+	landscape->surfaceType = texturedAndLit;
+	landscape->setMaterial(vec4(0.5922, 0.3216, 0.2588, 1.0), 0.0, 1.0, 0.0, 0.0);
+	landscape->buffer();
+	sceneObjects.push_back(landscape);
+	
+	SceneObject *bases = new SceneObject("bases.obj");
+	bases->setMaterial(vec4(0.407946, 0.407946, 0.407946, 1.000000), 0.1, 0.9, 0.4, 1000.0);
+	bases->buffer();
+	sceneObjects.push_back(bases);
+
+	SceneObject *foundation = new SceneObject("foundation.obj");
+	foundation->setMaterial(vec4(0.223571, 0.223571, 0.223571, 1.000000), 0.1, 0.9, 0.4, 1000.0);
+	foundation->buffer();
+	sceneObjects.push_back(foundation);
+	
+	SceneObject *bridge = new SceneObject("bridge.obj");
+	bridge->setMaterial(vec4(0.453661, 0.332416, 0.332416, 1.000000), 0.2, 0.8, 0.2, 200.0);
+	bridge->buffer();
+	sceneObjects.push_back(bridge);
+	
+	SceneObject *buildings = new SceneObject("buildings.obj");
+	buildings->setMaterial(vec4(0.501949, 0.614796, 0.614796, 1.000000), 0.5, 0.5, 0.2, 1000.0);
+	buildings->buffer();
+	sceneObjects.push_back(buildings);
+	
+	Skybox *skybox = new Skybox("mars");
+	skybox->buffer();
+	sceneObjects.push_back(skybox);
 }

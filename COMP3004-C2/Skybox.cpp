@@ -11,7 +11,7 @@
 #include "utils.h"
 #include "Texture.h"
 
-#define DEFAULT_SIZE 10000.0
+#define DEFAULT_SIZE 11000.0
 #define PT (size / 2.0)
 
 using namespace glm;
@@ -43,6 +43,7 @@ void Skybox::render() {
 }
 
 void Skybox::init(float size, const char *textureName) {
+	surfaceType = textured;
 	string texture = textureName, face;
 	
 	face = "_front.tga";
@@ -117,8 +118,7 @@ void Skybox::init(float size, const char *textureName) {
 Vertex skyboxVertex(float x, float y, float z, int texture, float s, float t) {
 	Vertex v;
 	v.position = vec4(x, y, z, 1.0);
-	v.texture = texture;
 	v.texcoords = vec2(s, t);
-	v.colour = BLUE;
+	v.colour = RED;
 	return v;
 }

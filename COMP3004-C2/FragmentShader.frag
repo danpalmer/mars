@@ -8,6 +8,8 @@ in Attributes {
 	vec4 lighting;
 } attribs;
 
+flat in int out_surfaceType;
+
 const int MAXLIGHTS = 4;
 uniform int lightcount;
 uniform vec3 lightpos[MAXLIGHTS];
@@ -17,9 +19,23 @@ uniform sampler2D texture;
 
 out vec4 colour;
 
+void phong(vec4 col);
+
 void main(void) {
+	if (out_surfaceType == 0) {
+		colour = vec4(texture(texture, attribs.texcoords).rgb, 1.0);
+	} else if (out_surfaceType == 1) {
+		phong(attribs.colour);
+	} else if (out_surfaceType == 2) {
+		phong(vec4(texture(texture, attribs.texcoords).rgb, 1.0));
+	} else {
+		colour = vec4(1.0, 0.0, 1.0, 1.0);
+	}
+}
 
-
+void phong(vec4 col) {
+	
+	// attribs.lighting = ambient, diffuse, specular
 	vec4 diffuse = vec4(attribs.lighting.y, attribs.lighting.y, attribs.lighting.y, 1.0);
 	vec4 specular = vec4(attribs.lighting.z, attribs.lighting.z, attribs.lighting.z, 1.0);
 	float shininess = attribs.lighting.w;
@@ -38,11 +54,10 @@ void main(void) {
 	
 	//		colour += (ambient + Ispec + Idiff);
 	//	}
-
-	// Textures are exact blue, would be better to have a flag in the attribs
-	if (attribs.colour == vec4(0.0, 0.0, 1.0, 1.0)) {
-		colour = vec4(texture(texture, attribs.texcoords).rgb, 1.0);
-	} else {
-		colour = attribs.colour * (ambient + Ispec + Idiff);//colour;
-	}
+	
+//	colour = attribs.colour * (ambient + Ispec + Idiff);
+//	colour = Ispec * (ambient + Idiff) + col;
+//	colour = ((ambient + Idiff) * col) +Ispec;
+	colour = (attribs.colour * ambient) + (col * Idiff) + Ispec;
+//	colour = vec4(0.0, 1.0, 0.0, 1.0);
 }

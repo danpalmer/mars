@@ -23,10 +23,11 @@ SceneObject::SceneObject() {
 	wireframe = false;
 }
 
-SceneObject::SceneObject(char const *objFilename, char const *mtlFilename) {
+SceneObject::SceneObject(char const *objFilename) {
     this->_loadOBJ(objFilename);
 	smooth = false;
 	wireframe = false;
+	surfaceType = lit;
 	check("Created Object");
 }
 
@@ -80,15 +81,23 @@ void SceneObject::unbind() {
 void SceneObject::render() {
 	bind();
 	
-	if (smooth) {
-		glEnable(GL_SMOOTH);
-	} else {
-		glEnable(GL_FLAT);
+	if (texture != NULL) {
+		texture->bind();
 	}
-	glGetError();
+	
+//	if (smooth) {
+//		glEnable(GL_SMOOTH);
+//	} else {
+//		glEnable(GL_FLAT);
+//	}
+//	glGetError();
 	
 	glDrawArrays(wireframe ? GL_LINES : GL_TRIANGLES, 0, (GLsizei)vertices.size());
 	check("Rendered SceneObject");
+	
+	if (texture != NULL) {
+		texture->unbind();
+	}
 	
 	unbind();
 }
@@ -246,9 +255,8 @@ void SceneObject::_loadOBJ(const char *filename) {
 				vertex.normal = normal;
 			}
 			
-			vertex.colour = glm::vec4(0.5940, 0.2100, 0.0588, 1);
+			vertex.colour = RED;
 			vertex.lighting = glm::vec4(0.2, 0.8, 1.0, 100.0);
-			vertex.texture = -1;
 			
 			vertices.push_back(vertex);
 		}
@@ -256,4 +264,11 @@ void SceneObject::_loadOBJ(const char *filename) {
 	
 	cout << "Read object " << filename << endl;
 	fin.close();
+}
+
+void SceneObject::setMaterial(vec4 colour, float ambient, float diffuse, float specular, float shininess) {
+	for (int i = 0; i < vertices.size(); i++) {
+		vertices[i].colour = colour;
+		vertices[i].lighting = vec4(ambient, diffuse, specular, shininess);
+	}
 }

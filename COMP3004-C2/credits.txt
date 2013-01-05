@@ -7,9 +7,16 @@ Method for parsing a file in C++
 Processing of OBJ and MTL files
 	http://xiangchen.wordpress.com/2010/05/04/loading-a-obj-file-in-opengl/
 
-Advice on handling multiple textures and use of GLSL
+Advice on handling multiple textures and use of GLSL,
+Help debugging OBJ file exporting from 3DS Max
 	Andy Esser http://twitter.com/LeadHyperion
 
-Camera
+Camera Tutorials
+	http://www.opengl-tutorial.org/beginners-tutorials/tutorial-6-keyboard-and-mouse/
 	http://r3dux.org/2011/05/simple-opengl-keyboard-and-mouse-fps-controls/
 
+Textures
+	http://www.cgtextures.com/
+
+Building Models
+	http://www.scifi-meshes.com/forums/downloads.php?do=file&id=10

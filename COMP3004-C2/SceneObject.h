@@ -20,29 +20,36 @@
 #include <GL/glew.h>
 #include <GL/glfw.h>
 
+enum SurfaceType {
+	textured = 0,
+	lit = 1,
+	texturedAndLit = 2
+};
+
 typedef struct {
 	glm::vec4 position;
 	glm::vec4 colour;
 	glm::vec3 normal;
 	glm::vec2 texcoords;
 	glm::vec4 lighting; // Ambient, Diffuse, Specular, Shininess
-	GLuint texture;
 } Vertex;
 
 class SceneObject {
 public:
 	std::vector<Vertex> vertices;
-	std::vector<Texture *> textures;
+	Texture *texture = NULL;
 	GLuint vertexBuffer, vertexArray;
 	bool smooth, wireframe;
+	GLint surfaceType;
 	
 	SceneObject();
-    SceneObject(char const *objFilename, char const *mtlFilename);
+    SceneObject(char const *objFilename);
 	
 	void buffer();
 	void bind();
 	void unbind();
 	virtual void render();
+	void setMaterial(glm::vec4 colour, float ambient, float diffuse, float specular, float shininess);
 
 private:
 	void _loadOBJ(char const *filename);

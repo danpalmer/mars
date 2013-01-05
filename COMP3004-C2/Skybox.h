@@ -28,6 +28,8 @@ public:
 		<name>_<direction>.tga
 	 Where <direction> is one of {top, bottom, left, right, front, back}
 	 */
+	std::vector<Texture *> textures;
+	
 	Skybox(char const *textureName);
 	Skybox(float size, char const *textureName);
 	
