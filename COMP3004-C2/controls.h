@@ -20,12 +20,6 @@
 using namespace glm;
 
 class Camera {
-	glm::vec3 position = glm::vec3( 0, 0, 5 );
-	
-	float horizontalAngle = 3.14f;
-	float verticalAngle = 0.0f;
-	float fieldOfView = 45.0f;
-	
 	float speed = 1000.0f;
 	float mouseSpeed = 0.5f;
 	
@@ -35,10 +29,19 @@ class Camera {
 	mat4 ViewMatrix;
 	
 public:
+	Camera();
+	vec3 position;
+	float horizontalAngle;
+	float verticalAngle;
+	float fieldOfView;
+	
 	void computeMatricesFromInputs();
 	mat4 getProjectionMatrix();
 	mat4 getViewMatrix();
 	vec3 getPosition();
+	
+	void resetToPosition0();
+	void resetToPosition1();
 };
 
 

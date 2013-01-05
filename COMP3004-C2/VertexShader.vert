@@ -31,7 +31,7 @@ flat out int out_surfaceType;
 
 void main(void) {
 	
-	mat4 modelView = model * view;
+	mat4 modelView = view * model;
 	attribs.position = perspective * modelView * position;
 	
 	attribs.colour = colour;

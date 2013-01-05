@@ -41,6 +41,7 @@ public:
 	GLuint vertexBuffer, vertexArray;
 	bool smooth, wireframe;
 	GLint surfaceType;
+	glm::vec3 translation, rotation;
 	
 	SceneObject();
     SceneObject(char const *objFilename);
@@ -48,7 +49,7 @@ public:
 	void buffer();
 	void bind();
 	void unbind();
-	virtual void render();
+	virtual void render(GLint shader);
 	void setMaterial(glm::vec4 colour, float ambient, float diffuse, float specular, float shininess);
 
 private:

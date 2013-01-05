@@ -33,7 +33,7 @@ public:
 	Skybox(char const *textureName);
 	Skybox(float size, char const *textureName);
 	
-	void render();
+	void render(GLint shader);
 	
 private:
 	void init(float size, char const *textureName);

@@ -21,6 +21,8 @@ using namespace glm;
 SceneObject::SceneObject() {
 	smooth = true;
 	wireframe = false;
+	translation = vec3(0.0);
+	rotation = vec3(0.0);
 }
 
 SceneObject::SceneObject(char const *objFilename) {
@@ -78,7 +80,7 @@ void SceneObject::unbind() {
 	check("Unbound SceneObject");
 }
 
-void SceneObject::render() {
+void SceneObject::render(GLint shader) {
 	bind();
 	
 	if (texture != NULL) {

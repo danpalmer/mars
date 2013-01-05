@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		372B883416985D3D005FBE0C /* KeyframeAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 372B883216985D3D005FBE0C /* KeyframeAnimator.cpp */; };
+		372B883816987008005FBE0C /* car.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 372B883616986FFF005FBE0C /* car.obj */; };
+		372B883916987008005FBE0C /* ship.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 372B883716986FFF005FBE0C /* ship.obj */; };
+		372B883C1698DB4F005FBE0C /* CameraKeyframeAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 372B883A1698DB4F005FBE0C /* CameraKeyframeAnimator.cpp */; };
 		3732B6391697330B000C63A8 /* bases.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3732B634169732F2000C63A8 /* bases.obj */; };
 		3732B63A1697330B000C63A8 /* bridge.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3732B635169732F2000C63A8 /* bridge.obj */; };
 		3732B63B1697330B000C63A8 /* buildings.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3732B636169732F2000C63A8 /* buildings.obj */; };
@@ -39,6 +43,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				372B883816987008005FBE0C /* car.obj in CopyFiles */,
+				372B883916987008005FBE0C /* ship.obj in CopyFiles */,
 				3732B6391697330B000C63A8 /* bases.obj in CopyFiles */,
 				3732B63A1697330B000C63A8 /* bridge.obj in CopyFiles */,
 				3732B63B1697330B000C63A8 /* buildings.obj in CopyFiles */,
@@ -60,6 +66,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		372B883216985D3D005FBE0C /* KeyframeAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyframeAnimator.cpp; sourceTree = "<group>"; };
+		372B883316985D3D005FBE0C /* KeyframeAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyframeAnimator.h; sourceTree = "<group>"; };
+		372B883616986FFF005FBE0C /* car.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = car.obj; sourceTree = "<group>"; };
+		372B883716986FFF005FBE0C /* ship.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = ship.obj; sourceTree = "<group>"; };
+		372B883A1698DB4F005FBE0C /* CameraKeyframeAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CameraKeyframeAnimator.cpp; sourceTree = "<group>"; };
+		372B883B1698DB4F005FBE0C /* CameraKeyframeAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraKeyframeAnimator.h; sourceTree = "<group>"; };
 		3732B634169732F2000C63A8 /* bases.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = bases.obj; sourceTree = "<group>"; };
 		3732B635169732F2000C63A8 /* bridge.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = bridge.obj; sourceTree = "<group>"; };
 		3732B636169732F2000C63A8 /* buildings.obj */ = {isa = PBXFileReference; lastKnownFileType = text; path = buildings.obj; sourceTree = "<group>"; };
@@ -132,12 +144,16 @@
 				37F552E816826F4F004CB411 /* shaders.h */,
 				37F552EA16827160004CB411 /* utils.cpp */,
 				37F552EB16827160004CB411 /* utils.h */,
+				372B883216985D3D005FBE0C /* KeyframeAnimator.cpp */,
+				372B883316985D3D005FBE0C /* KeyframeAnimator.h */,
 				37F5551016833C50004CB411 /* SceneObject.cpp */,
 				37F5551116833C50004CB411 /* SceneObject.h */,
 				374C5A631688790800C56E78 /* Texture.cpp */,
 				374C5A641688790800C56E78 /* Texture.h */,
 				374C5A7316887B6A00C56E78 /* Skybox.cpp */,
 				374C5A7416887B6A00C56E78 /* Skybox.h */,
+				372B883A1698DB4F005FBE0C /* CameraKeyframeAnimator.cpp */,
+				372B883B1698DB4F005FBE0C /* CameraKeyframeAnimator.h */,
 				37F5551316833D99004CB411 /* credits.txt */,
 				37F552E416826E74004CB411 /* Shaders */,
 				37FD94771684C95D00716C5A /* Resources */,
@@ -162,6 +178,8 @@
 				3732B636169732F2000C63A8 /* buildings.obj */,
 				3732B637169732F2000C63A8 /* foundation.obj */,
 				37FD94781684C96800716C5A /* mars-landscape.obj */,
+				372B883616986FFF005FBE0C /* car.obj */,
+				372B883716986FFF005FBE0C /* ship.obj */,
 				37B293D51695F60D00430137 /* ground_texture.tga */,
 				374C5A7616889C7100C56E78 /* mars_back.tga */,
 				374C5A7716889C7100C56E78 /* mars_bottom.tga */,
@@ -232,6 +250,8 @@
 				374C5A651688790800C56E78 /* Texture.cpp in Sources */,
 				374C5A7516887B6A00C56E78 /* Skybox.cpp in Sources */,
 				37B293D31695C7CD00430137 /* controls.cpp in Sources */,
+				372B883416985D3D005FBE0C /* KeyframeAnimator.cpp in Sources */,
+				372B883C1698DB4F005FBE0C /* CameraKeyframeAnimator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

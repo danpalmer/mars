@@ -27,7 +27,7 @@ Skybox::Skybox(char const *textureName) {
 	init(DEFAULT_SIZE, textureName);
 }
 
-void Skybox::render() {
+void Skybox::render(GLint shader) {
 	bind();
 	
 	int vertsPerTexture = (int)vertices.size() / textures.size();

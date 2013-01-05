@@ -25,11 +25,13 @@
 #include "utils.h"
 #include "SceneObject.h"
 #include "Skybox.h"
+#include "KeyframeAnimator.h"
+#include "CameraKeyframeAnimator.h"
 
 using namespace glm;
 using namespace std;
 
-void init();
+void initGraphics();
 void render(int frame, vector<SceneObject *> sceneObjects, vector<glm::vec3> sceneLights, GLuint shader);
 void GLFWCALL keyHandler(int key, int action);
 void checkKeyHolds();
@@ -37,12 +39,17 @@ void initSceneObjects();
 
 bool onTour = false;
 
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 800
+
 Camera *camera = new Camera();
+CameraKeyframeAnimator *cameraAnimator = new CameraKeyframeAnimator(camera);
 vector<SceneObject *> sceneObjects;
+vector<KeyframeAnimator *> animators;
 
 int main(int argc, const char * argv[]) {
 	int running = GL_TRUE;
-	init();
+	initGraphics();
 	
 	vector<GLint> shaders;
 	shaders.push_back(setupShader("VertexShader.vert", GL_VERTEX_SHADER));
@@ -56,6 +63,8 @@ int main(int argc, const char * argv[]) {
 	vector<vec3> sceneLights;
 	vec3 sun = vec3(-5000.0, 5000.0, 5000.0);
 	sceneLights.push_back(sun);
+	
+	glfwSetMousePos(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 	
 	int i = 0;
 	static double t0 = glfwGetTime();
@@ -79,7 +88,7 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 
-void init() {
+void initGraphics() {
 	if (!glfwInit()) {
 		exit(EXIT_FAILURE);
 	}
@@ -93,7 +102,7 @@ void init() {
 	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
 	glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	
-	if (!glfwOpenWindow(1280, 800, 0, 0, 0, 0, 0, 1, GLFW_WINDOW)) {
+	if (!glfwOpenWindow(WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0, 0, 0, 0, 1, GLFW_WINDOW)) {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
@@ -113,25 +122,41 @@ void init() {
 
 void render(int frame, vector<SceneObject *> sceneObjects, vector<vec3> sceneLights, GLuint shader) {
 	
+	for (int i = 0; i < animators.size(); i++) {
+		animators[i]->animate();
+	}
+	
+	if (onTour) {
+		cameraAnimator->animate();
+	}
+	
 	mat4 perspective = camera->getProjectionMatrix();
-	mat4 model = mat4(1.0f);
 	mat4 view = camera->getViewMatrix();
 	
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	
 	glUniformMatrix4fv(glGetUniformLocation(shader, "perspective"), 1, GL_FALSE, value_ptr(perspective));
-	glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, value_ptr(model));
-	glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, value_ptr(view));
-	
 	glUniform1i(glGetUniformLocation(shader, "lightcount"), (GLint)sceneLights.size());
 	glUniform3fv(glGetUniformLocation(shader, "lightpos"), 1, value_ptr(sceneLights[0]));
 	vec3 camerapos = camera->getPosition();
 	glUniform3fv(glGetUniformLocation(shader, "camerapos"), 1, value_ptr(camerapos));
 	
 	for (int i = 0; i < sceneObjects.size(); i++) {
+		SceneObject *obj = sceneObjects[i];
 		glUniform1i(glGetUniformLocation(shader, "surface"), (GLint)sceneObjects[i]->surfaceType);
-		sceneObjects[i]->render();
+		
+		view = translate(view, -obj->translation);
+		mat4 model = mat4(1.0);
+		model = rotate(model, obj->rotation.x, vec3(1.0, 0.0, 0.0));
+		model = rotate(model, obj->rotation.y, vec3(0.0, 1.0, 0.0));
+		model = rotate(model, obj->rotation.z, vec3(0.0, 0.0, 1.0));
+		
+		glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, value_ptr(model));
+		glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, value_ptr(view));
+		sceneObjects[i]->render(shader);
+		
+		view = translate(view, obj->translation);
 	}
 }
 
@@ -155,10 +180,10 @@ void GLFWCALL keyHandler(int key, int action) {
 	// Locations
 	if (TEST_KEY('P')) {
 		// Move to screenshot location
-		
+		camera->resetToPosition0();
 	} else if (TEST_KEY('Y')) {
 		// Move to alternative location 1
-		
+		camera->resetToPosition1();
 	} else if (TEST_KEY('U')) {
 		// Move to alternative location 2
 		
@@ -167,12 +192,24 @@ void GLFWCALL keyHandler(int key, int action) {
 		onTour = true;
 	} else if (TEST_KEY('R')) {
 		// Reset all animation
+	} else if (TEST_KEY('C')) {
+		fprintf(stdout, "Camera Position: (%f, %f, %f)  Horizontal: %f  Vertical: %f\n",
+				camera->getPosition().x,
+				camera->getPosition().y,
+				camera->getPosition().z,
+				camera->horizontalAngle,
+				camera->verticalAngle);
 	}
 }
 #undef TEST_KEY
 
 void initSceneObjects() {
 	
+	// Static objects
+	
+	/*
+	 Landscape
+	 */
 	SceneObject *landscape = new SceneObject("mars-landscape.obj");
 	landscape->texture = new Texture("ground_texture.tga", 0, true);
 	landscape->surfaceType = texturedAndLit;
@@ -180,27 +217,88 @@ void initSceneObjects() {
 	landscape->buffer();
 	sceneObjects.push_back(landscape);
 	
+	
+	/*
+	 Main building bases
+	 */
 	SceneObject *bases = new SceneObject("bases.obj");
 	bases->setMaterial(vec4(0.407946, 0.407946, 0.407946, 1.000000), 0.1, 0.9, 0.4, 1000.0);
 	bases->buffer();
 	sceneObjects.push_back(bases);
 
+	
+	/*
+	 Building foundations
+	 */
 	SceneObject *foundation = new SceneObject("foundation.obj");
 	foundation->setMaterial(vec4(0.223571, 0.223571, 0.223571, 1.000000), 0.1, 0.9, 0.4, 1000.0);
 	foundation->buffer();
 	sceneObjects.push_back(foundation);
 	
+	
+	/*
+	 Bridge
+	 */
 	SceneObject *bridge = new SceneObject("bridge.obj");
 	bridge->setMaterial(vec4(0.453661, 0.332416, 0.332416, 1.000000), 0.2, 0.8, 0.2, 200.0);
 	bridge->buffer();
 	sceneObjects.push_back(bridge);
 	
+	
+	/* 
+	 Buildings
+	 */
 	SceneObject *buildings = new SceneObject("buildings.obj");
 	buildings->setMaterial(vec4(0.501949, 0.614796, 0.614796, 1.000000), 0.5, 0.5, 0.2, 1000.0);
 	buildings->buffer();
 	sceneObjects.push_back(buildings);
+
 	
+	/*
+	 Skybox
+	 */
 	Skybox *skybox = new Skybox("mars");
 	skybox->buffer();
 	sceneObjects.push_back(skybox);
+	
+	
+	// Animated Objects
+#define KEYFRAME(animator, time, position, rotation) animator->addKeyframe(createKeyframe(time, position, rotation));
+	
+	/*
+	 Bridge Car 1
+	 */
+	SceneObject *car1 = new SceneObject("car.obj");
+	car1->setMaterial(RED, 0.5, 0.5, 0.2, 100);
+	car1->translation = vec3(-137, -391, 1300);
+	car1->buffer();
+	sceneObjects.push_back(car1);
+	
+	KeyframeAnimator *car1Animator = new KeyframeAnimator(car1);
+	KEYFRAME(car1Animator, 0, vec3(0), vec3(0))
+	KEYFRAME(car1Animator, 10, vec3(0, 0, 1250), vec3(0))
+	KEYFRAME(car1Animator, 12, vec3(-30, 0, 1250), vec3(0, -180, 0))
+	KEYFRAME(car1Animator, 22, vec3(-30, 0, 0), vec3(0, -180, 0))
+	KEYFRAME(car1Animator, 24, vec3(0,0,0), vec3(0,0,0))
+	animators.push_back(car1Animator);
+	
+
+	/*
+	 Bridge Car 2
+	 */
+	SceneObject *car2 = new SceneObject("car.obj");
+	car2->setMaterial(RED, 0.5, 0.5, 0.2, 100);
+	car2->translation = vec3(-137, -391, 1300);
+	car2->buffer();
+	sceneObjects.push_back(car2);
+	
+	KeyframeAnimator *car2Animator = new KeyframeAnimator(car2);
+	KEYFRAME(car2Animator, 0, vec3(-30, 0, 1250), vec3(0))
+	KEYFRAME(car2Animator, 10, vec3(-30, 0, 0), vec3(0))
+	KEYFRAME(car2Animator, 12, vec3(0, 0, 0), vec3(0, -180, 0))
+	KEYFRAME(car2Animator, 22, vec3(0, 0, 1250), vec3(0, -180, 0))
+	KEYFRAME(car1Animator, 24, vec3(-30,0,1250), vec3(0,0,0))
+	animators.push_back(car2Animator);
+	
+#undef KEYFRAME
 }

@@ -8,6 +8,10 @@
 
 #include "controls.h"
 
+Camera::Camera() {
+	resetToPosition1();
+}
+
 void Camera::computeMatricesFromInputs() {
 	
 	double currentTime = glfwGetTime();
@@ -67,4 +71,18 @@ mat4 Camera::getViewMatrix() {
 
 vec3 Camera::getPosition() {
 	return position;
+}
+
+void Camera::resetToPosition0() {
+	position = vec3(-575,550,-3881);
+	horizontalAngle = 0.5;
+	verticalAngle = -0.01;
+	fieldOfView = 45.0f;
+}
+
+void Camera::resetToPosition1() {
+	position = vec3(150,1000,-5000);
+	horizontalAngle = 0;
+	verticalAngle = -0.25;
+	fieldOfView = 45.0f;
 }
