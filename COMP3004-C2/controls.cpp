@@ -16,6 +16,7 @@ Camera::Camera() {
 	mouseSpeed = 0.5f;
 	lastLoopTime = 0.0;
 	resetToPosition1();
+	forwardSpeed = 0.0f;
 }
 
 void Camera::computeMatricesFromInputs(bool ignoreInputs) {
@@ -57,11 +58,22 @@ void Camera::computeMatricesFromInputs(bool ignoreInputs) {
 	
 	if (!ignoreInputs) {
 		if (glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS){
+#if MOUSE_CONTROL
 			position += direction * deltaTime * speed;
+#else
+			forwardSpeed += (float)(deltaTime * speed * 0.02);
+#endif
 		}
 		
 		if (glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS){
+#if MOUSE_CONTROL
 			position -= direction * deltaTime * speed;
+#else
+			forwardSpeed -= (float)(deltaTime * speed * 0.02);
+			if (forwardSpeed < 0) {
+				forwardSpeed = 0.0f;
+			}
+#endif
 		}
 		
 		if (glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS){
@@ -79,6 +91,18 @@ void Camera::computeMatricesFromInputs(bool ignoreInputs) {
 			horizontalAngle += TURN_SPEED;
 #endif
 		}
+		
+		if (glfwGetKey(GLFW_KEY_PAGEUP) == GLFW_PRESS) {
+			position += vec3(0, speed * deltaTime, 0);
+		}
+		
+		if (glfwGetKey(GLFW_KEY_PAGEDOWN) == GLFW_PRESS) {
+			position -= vec3(0, speed * deltaTime, 0);
+		}
+		
+#if MOUSE_CONTROL == 0
+		position += direction * forwardSpeed;
+#endif
 	}
 	
 	float FoV = fieldOfView;

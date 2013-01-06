@@ -16,7 +16,8 @@ Camera Tutorials
 	http://r3dux.org/2011/05/simple-opengl-keyboard-and-mouse-fps-controls/
 
 Textures
-	http://www.cgtextures.com/
+	http://www.cgtextures.com/ (Ground)
+	http://kk3d.de/counter-strike/skies/ (Skybox)
 
 Building Models
 	http://www.scifi-meshes.com/forums/downloads.php?do=file&id=10

@@ -280,7 +280,7 @@ void SceneObject::_loadOBJ(const char *filename) {
 }
 
 void SceneObject::setMaterial(vec4 colour, float ambient, float diffuse, float specular, float shininess) {
-	for (int i = 0; i < vertices.size(); i++) {
+	for (unsigned int i = 0; i < vertices.size(); i++) {
 		vertices[i].colour = colour;
 		vertices[i].lighting = vec4(ambient, diffuse, specular, shininess);
 	}

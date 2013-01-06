@@ -315,6 +315,7 @@
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				OTHER_CFLAGS = "-Wall";
 				OTHER_LDFLAGS = (
 					"-lglfw",
 					"-lGLEW",
@@ -329,6 +330,7 @@
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				OTHER_CFLAGS = "-Wall";
 				OTHER_LDFLAGS = (
 					"-lglfw",
 					"-lGLEW",

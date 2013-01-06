@@ -31,7 +31,7 @@ void Skybox::render(GLint shader) {
 	bind();
 	
 	int vertsPerTexture = (int)(vertices.size() / textures.size());
-	for (int i = 0; i < textures.size(); i++) {
+	for (unsigned int i = 0; i < textures.size(); i++) {
 		textures[i]->bind();
 		glDrawArrays(GL_TRIANGLES, i * vertsPerTexture, vertsPerTexture);
 		textures[i]->unbind();

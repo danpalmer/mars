@@ -23,6 +23,8 @@ class Camera {
 	float speed;
 	float mouseSpeed;
 	
+	float forwardSpeed;
+	
 	double lastLoopTime;
 	
 	mat4 ProjectionMatrix;

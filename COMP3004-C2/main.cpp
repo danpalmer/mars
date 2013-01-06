@@ -122,7 +122,7 @@ void initGraphics() {
 
 void render(int frame, vector<SceneObject *> sceneObjects, vector<vec3> sceneLights, GLuint shader) {
 	
-	for (int i = 0; i < animators.size(); i++) {
+	for (unsigned int i = 0; i < animators.size(); i++) {
 		animators[i]->animate();
 	}
 	
@@ -146,7 +146,7 @@ void render(int frame, vector<SceneObject *> sceneObjects, vector<vec3> sceneLig
 	vec3 camerapos = camera->getPosition();
 	glUniform3fv(glGetUniformLocation(shader, "camerapos"), 1, value_ptr(camerapos));
 	
-	for (int i = 0; i < sceneObjects.size(); i++) {
+	for (unsigned int i = 0; i < sceneObjects.size(); i++) {
 		SceneObject *obj = sceneObjects[i];
 		glUniform1i(glGetUniformLocation(shader, "surface"), (GLint)sceneObjects[i]->surfaceType);
 		
@@ -195,12 +195,12 @@ void GLFWCALL keyHandler(int key, int action) {
 		// Start tour, ignore other key presses except exit
 		onTour = true;
 		cameraAnimator->reset();
-		for (int i = 0; i < animators.size(); i++) {
+		for (unsigned int i = 0; i < animators.size(); i++) {
 			animators[i]->reset();
 		}
 	} else if (TEST_KEY('R')) {
 		// Reset all animation
-		for (int i = 0; i < animators.size(); i++) {
+		for (unsigned int i = 0; i < animators.size(); i++) {
 			animators[i]->reset();
 		}
 	} else if (TEST_KEY('C')) {

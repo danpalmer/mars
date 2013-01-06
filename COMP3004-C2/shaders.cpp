@@ -8,6 +8,11 @@
 
 #include "shaders.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <cstdlib>
+
 #include "utils.h"
 
 char *_fileToBuffer(char const *filename) {
@@ -61,7 +66,7 @@ GLint setupShader(char const *filename, GLint type) {
 
 GLint linkShaders(std::vector<GLint> shaders) {
 	GLint program = glCreateProgram();
-	for (int i = 0; i < shaders.size(); i++) {
+	for (unsigned int i = 0; i < shaders.size(); i++) {
 		glAttachShader(program, shaders[i]);
 	}
 	

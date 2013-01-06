@@ -24,7 +24,7 @@ Texture::Texture(char const *filename, int flags, bool repeat) {
 		exit(EXIT_FAILURE);
 	}
 	
-	glBindTexture(GL_TEXTURE_2D, NULL);
+	glBindTexture(GL_TEXTURE_2D, (GLuint)NULL);
 	check("Loaded Texture");
 }
 
@@ -36,6 +36,6 @@ void Texture::bind() {
 
 void Texture::unbind() {
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, NULL);
+	glBindTexture(GL_TEXTURE_2D, (GLuint)NULL);
 	check("Unbound Texture");
 }
