@@ -20,10 +20,10 @@
 using namespace glm;
 
 class Camera {
-	float speed = 1000.0f;
-	float mouseSpeed = 0.5f;
+	float speed;
+	float mouseSpeed;
 	
-	double lastLoopTime = 0.0;
+	double lastLoopTime;
 	
 	mat4 ProjectionMatrix;
 	mat4 ViewMatrix;

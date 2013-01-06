@@ -37,7 +37,7 @@ typedef struct {
 class SceneObject {
 public:
 	std::vector<Vertex> vertices;
-	Texture *texture = NULL;
+	Texture *texture;
 	GLuint vertexBuffer, vertexArray;
 	bool smooth, wireframe;
 	GLint surfaceType;

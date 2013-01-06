@@ -13,6 +13,7 @@ KeyframeAnimator::KeyframeAnimator(SceneObject *object) {
 	originalRotation = vec3(object->rotation);
 	this->object = object;
 	currentKeyframeIndex = 0;
+	timeOffset = 0.0;
 }
 
 void KeyframeAnimator::reset() {
@@ -34,7 +35,7 @@ void KeyframeAnimator::animate() {
 	if (currentTime > to->time) {
 		from = to;
 		to = keyframes[(currentKeyframeIndex + 2) % keyframes.size()];
-		currentKeyframeIndex = (currentKeyframeIndex + 1) % keyframes.size();
+		currentKeyframeIndex = (int)((currentKeyframeIndex + 1) % keyframes.size());
 		if (from->time == 0) {
 			timeOffset = glfwGetTime();
 		}
@@ -48,7 +49,7 @@ void KeyframeAnimator::animate() {
 Keyframe *KeyframeAnimator::interpolateKeyframes(Keyframe *k1, Keyframe *k2, double time) {
 	Keyframe *now = new Keyframe();
 	
-	float lambda = (time - k1->time) / (k2->time - k1->time);
+	float lambda = (float)((time - k1->time) / (k2->time - k1->time));
 	
 	now->position = k1->position + (lambda * (k2->position - k1->position));
 	now->rotation = k1->rotation + (lambda * (k2->rotation - k1->rotation));

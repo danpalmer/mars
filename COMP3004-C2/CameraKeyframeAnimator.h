@@ -21,7 +21,7 @@
 using namespace glm;
 using namespace std;
 
-typedef struct _CameraKeyframe {
+typedef struct {
 	double time;
 	vec3 position;
 	float horizontalAngle;
@@ -35,7 +35,7 @@ class CameraKeyframeAnimator {
 	vector<CameraKeyframe *> keyframes;
 	int currentKeyframeIndex;
 	Camera *camera;
-	double timeOffset = 0.0;
+	double timeOffset;
 	
 public:
 	CameraKeyframeAnimator(Camera *camera);

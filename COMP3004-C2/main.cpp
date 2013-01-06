@@ -137,7 +137,7 @@ void render(int frame, vector<SceneObject *> sceneObjects, vector<vec3> sceneLig
 	mat4 perspective = camera->getProjectionMatrix();
 	mat4 view = camera->getViewMatrix();
 	
-	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	
 	glUniformMatrix4fv(glGetUniformLocation(shader, "perspective"), 1, GL_FALSE, value_ptr(perspective));
@@ -222,7 +222,7 @@ void initSceneObjects() {
 	 Main building bases
 	 */
 	SceneObject *bases = new SceneObject("bases.obj");
-	bases->setMaterial(vec4(0.407946, 0.407946, 0.407946, 1.000000), 0.1, 0.9, 0.4, 1000.0);
+	bases->setMaterial(vec4(0.407946f, 0.407946f, 0.407946f, 1.000000f), 0.1f, 0.9f, 0.4f, 1000.0f);
 	bases->buffer();
 	sceneObjects.push_back(bases);
 
@@ -231,7 +231,7 @@ void initSceneObjects() {
 	 Building foundations
 	 */
 	SceneObject *foundation = new SceneObject("foundation.obj");
-	foundation->setMaterial(vec4(0.223571, 0.223571, 0.223571, 1.000000), 0.1, 0.9, 0.4, 1000.0);
+	foundation->setMaterial(vec4(0.223571f, 0.223571f, 0.223571f, 1.000000f), 0.1f, 0.9f, 0.4f, 1000.0f);
 	foundation->buffer();
 	sceneObjects.push_back(foundation);
 	
@@ -240,7 +240,7 @@ void initSceneObjects() {
 	 Bridge
 	 */
 	SceneObject *bridge = new SceneObject("bridge.obj");
-	bridge->setMaterial(vec4(0.453661, 0.332416, 0.332416, 1.000000), 0.2, 0.5, 0.3, 200.0);
+	bridge->setMaterial(vec4(0.453661f, 0.332416f, 0.332416f, 1.000000f), 0.2f, 0.5f, 0.3f, 200.0f);
 	bridge->buffer();
 	sceneObjects.push_back(bridge);
 	
@@ -249,7 +249,7 @@ void initSceneObjects() {
 	 Buildings
 	 */
 	SceneObject *buildings = new SceneObject("buildings.obj");
-	buildings->setMaterial(vec4(0.501949, 0.614796, 0.614796, 1.000000), 0.2, 0.8, 0.6, 1000.0);
+	buildings->setMaterial(vec4(0.501949f, 0.614796f, 0.614796f, 1.000000f), 0.2f, 0.8f, 0.6f, 1000.0f);
 	buildings->buffer();
 	sceneObjects.push_back(buildings);
 
@@ -269,7 +269,7 @@ void initSceneObjects() {
 	 Bridge Car 1
 	 */
 	SceneObject *car1 = new SceneObject("car.obj");
-	car1->setMaterial(BLUE, 0.1, 0.1, 0.8, 3000);
+	car1->setMaterial(BLUE, 0.1f, 0.1f, 0.8f, 3000.0f);
 	car1->translation = vec3(-137, -391, 1300);
 	car1->buffer();
 	sceneObjects.push_back(car1);
@@ -287,7 +287,7 @@ void initSceneObjects() {
 	 Bridge Car 2
 	 */
 	SceneObject *car2 = new SceneObject("car.obj");
-	car2->setMaterial(RED, 0.1, 0.1, 0.8, 3000);
+	car2->setMaterial(RED, 0.1f, 0.1f, 0.8f, 3000.0f);
 	car2->translation = vec3(-137, -391, 1300);
 	car2->buffer();
 	sceneObjects.push_back(car2);
@@ -305,7 +305,7 @@ void initSceneObjects() {
 	 Ship 1 (taking off)
 	 */
 	SceneObject *ship1 = new SceneObject("ship.obj");
-	ship1->setMaterial(vec4(0.561966, 0.782683, 0.782683, 1.000000), 0.1, 0.9, 0.7, 3000);
+	ship1->setMaterial(vec4(0.561966f, 0.782683f, 0.782683f, 1.000000f), 0.1f, 0.9f, 0.7f, 3000.0f);
 	ship1->translation = vec3(-364, -236, 912);
 	ship1->buffer();
 	sceneObjects.push_back(ship1);
@@ -323,7 +323,7 @@ void initSceneObjects() {
 	 Ship 2 (figure 8)
 	 */
 	SceneObject *ship2 = new SceneObject("ship.obj");
-	ship2->setMaterial(vec4(0.561966, 0.782683, 0.782683, 1.000000), 0.1, 0.9, 0.7, 3000);
+	ship2->setMaterial(vec4(0.561966f, 0.782683f, 0.782683f, 1.000000f), 0.1f, 0.9f, 0.7f, 3000.0f);
 	ship2->translation = vec3(-800, -1000, 800);
 	ship2->buffer();
 	sceneObjects.push_back(ship2);
@@ -355,26 +355,26 @@ void initSceneObjects() {
 #define NORMAL_FOV 45
 #define ZOOM_FOV 20
 	float time = 0;
-	cameraAnimator->addKeyframe(createCameraKeyframe(time, vec3(150.000000, 1000.000000, -5000.000000), 0.000000, -0.250000, NORMAL_FOV));		// start
-	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(998.909302, 785.915039, -4656.653809), -0.667321, -0.047858, NORMAL_FOV));
-	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(-672.809692, 657.641174, -4148.628906), 0.502348, -0.173394, NORMAL_FOV));
-	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(216.018677, 391.614532, -3286.671143), 0.108119, -0.015488, NORMAL_FOV));		// end opening
-	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(237.933456, 397.782043, -3086.380127), -0.573812, 0.253406, WIDE_FOV));		// start gatehouse
-	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(340.526001, 395.940704, -3004.105713), -0.593840, 0.127725, WIDE_FOV));
-	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(319.041504, 407.835754, -2710.398682), -2.210917, 0.103304, WIDE_FOV));
-	cameraAnimator->addKeyframe(createCameraKeyframe(SHORT, vec3(195.028229, 408.228882, -2663.615723), -0.499117, -0.031121, WIDE_FOV));		// end gatehouse
-	cameraAnimator->addKeyframe(createCameraKeyframe(SHORT, vec3(162.627991, 406.113037, -2603.870361), -0.156223, -0.065116, NORMAL_FOV));		// start bridge
-	cameraAnimator->addKeyframe(createCameraKeyframe(LONG, vec3(161.485489, 397.687958, -2301.598145), 0.011810, 0.010723, NORMAL_FOV));
-	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(165.569214, 406.901978, -1684.026367), 0.003080, -0.031551, NORMAL_FOV));
-	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(168.063965, 416.927124, -1253.849365), 0.058967, -0.043376, NORMAL_FOV));		// end bridge
-	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(226.445984, 455.948242, -1044.670288), -0.243098, 1.094442, NORMAL_FOV));
-	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(148.719391, 1250.437988, -904.740540), -0.024578, 1.275791, NORMAL_FOV));		// end tower
-	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(146.938766, 2483.820557, -988.341248), -0.019644, -1.616784, NORMAL_FOV));
-	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(-1134.093384, 606.541382, -1548.947998), 1.191051, -0.173938, ZOOM_FOV));
-	cameraAnimator->addKeyframe(createCameraKeyframe(LONG, vec3(25.547859, 882.380249, 642.614746), 3.113941, -0.259662, NORMAL_FOV));
-	cameraAnimator->addKeyframe(createCameraKeyframe(LONG, vec3(1787.619507, 142.188950, -1110.956055), 4.883299, 0.094412, ZOOM_FOV));			// ship take off at 50s
-	cameraAnimator->addKeyframe(createCameraKeyframe(LONG, vec3(1787.619507, 142.188950, -1110.956055), 4.883299, 0.094412, NORMAL_FOV));		// watch ship take off
-	cameraAnimator->addKeyframe(createCameraKeyframe(LONG, vec3(3606.669434, -32.609947, -1424.913330), 4.883299, 0.094412, NORMAL_FOV));
+	cameraAnimator->addKeyframe(createCameraKeyframe(time, vec3(150.000000f, 1000.000000f, -5000.000000f), 0.000000f, -0.250000f, NORMAL_FOV));		// start
+	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(998.909302f, 785.915039f, -4656.653809f), -0.667321f, -0.047858f, NORMAL_FOV));
+	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(-672.809692f, 657.641174f, -4148.628906f), 0.502348f, -0.173394f, NORMAL_FOV));
+	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(216.018677f, 391.614532f, -3286.671143f), 0.108119f, -0.015488f, NORMAL_FOV));		// end opening
+	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(237.933456f, 397.782043f, -3086.380127f), -0.573812f, 0.253406f, WIDE_FOV));		// start gatehouse
+	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(340.526001f, 395.940704f, -3004.105713f), -0.593840f, 0.127725f, WIDE_FOV));
+	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(319.041504f, 407.835754f, -2710.398682f), -2.210917f, 0.103304f, WIDE_FOV));
+	cameraAnimator->addKeyframe(createCameraKeyframe(SHORT, vec3(195.028229f, 408.228882f, -2663.615723f), -0.499117f, -0.031121f, WIDE_FOV));		// end gatehouse
+	cameraAnimator->addKeyframe(createCameraKeyframe(SHORT, vec3(162.627991f, 406.113037f, -2603.870361f), -0.156223f, -0.065116f, NORMAL_FOV));		// start bridge
+	cameraAnimator->addKeyframe(createCameraKeyframe(LONG, vec3(161.485489f, 397.687958f, -2301.598145f), 0.011810f, 0.010723f, NORMAL_FOV));
+	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(165.569214f, 406.901978f, -1684.026367f), 0.003080f, -0.031551f, NORMAL_FOV));
+	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(168.063965f, 416.927124f, -1253.849365f), 0.058967f, -0.043376f, NORMAL_FOV));		// end bridge
+	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(226.445984f, 455.948242f, -1044.670288f), -0.243098f, 1.094442f, NORMAL_FOV));
+	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(148.719391f, 1250.437988f, -904.740540f), -0.024578f, 1.275791f, NORMAL_FOV));		// end tower
+	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(146.938766f, 2483.820557f, -988.341248f), -0.019644f, -1.616784f, NORMAL_FOV));
+	cameraAnimator->addKeyframe(createCameraKeyframe(MEDIUM, vec3(-1134.093384f, 606.541382f, -1548.947998f), 1.191051f, -0.173938f, ZOOM_FOV));
+	cameraAnimator->addKeyframe(createCameraKeyframe(LONG, vec3(25.547859f, 882.380249f, 642.614746f), 3.113941f, -0.259662f, NORMAL_FOV));
+	cameraAnimator->addKeyframe(createCameraKeyframe(LONG, vec3(1787.619507f, 142.188950f, -1110.956055f), 4.883299f, 0.094412f, ZOOM_FOV));			// ship take off at 50s
+	cameraAnimator->addKeyframe(createCameraKeyframe(LONG, vec3(1787.619507f, 142.188950f, -1110.956055f), 4.883299f, 0.094412f, NORMAL_FOV));		// watch ship take off
+	cameraAnimator->addKeyframe(createCameraKeyframe(LONG, vec3(3606.669434f, -32.609947f, -1424.913330f), 4.883299f, 0.094412f, NORMAL_FOV));
 #undef WIDE_FOV
 #undef NORMAL_FOV
 #undef ZOOM_FOV
@@ -390,7 +390,7 @@ void initSceneObjects() {
 	SceneObject *landscape = new SceneObject("mars-landscape.obj");
 	landscape->texture = new Texture("ground_texture.tga", 0, true);
 	landscape->surfaceType = texturedAndLit;
-	landscape->setMaterial(vec4(0.5922, 0.3216, 0.2588, 1.0), 0.0, 1.0, 0.0, 0.0);
+	landscape->setMaterial(vec4(0.5922f, 0.3216f, 0.2588f, 1.0f), 0.0f, 1.0f, 0.0f, 0.0f);
 	landscape->buffer();
 	sceneObjects.push_back(landscape);
 }

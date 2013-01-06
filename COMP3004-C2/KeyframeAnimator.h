@@ -21,7 +21,7 @@
 using namespace glm;
 using namespace std;
 
-typedef struct _Keyframe {
+typedef struct {
 	double time;
 	vec3 position;
 	vec3 rotation;
@@ -35,7 +35,7 @@ class KeyframeAnimator {
 	SceneObject *object;
 	vec3 originalTranslation;
 	vec3 originalRotation;
-	double timeOffset = 0.0;
+	double timeOffset;
 	
 public:
 	KeyframeAnimator(SceneObject *object);

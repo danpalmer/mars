@@ -9,9 +9,12 @@
 #include "controls.h"
 
 #define MOUSE_CONTROL 0
-#define TURN_SPEED 0.05
+#define TURN_SPEED (float)0.05
 
 Camera::Camera() {
+	speed = 1000.0f;
+	mouseSpeed = 0.5f;
+	lastLoopTime = 0.0;
 	resetToPosition1();
 }
 
@@ -97,7 +100,7 @@ vec3 Camera::getPosition() {
 
 void Camera::resetToPosition0() {
 	position = vec3(-575,550,-3881);
-	horizontalAngle = 0.5;
+	horizontalAngle = 0.5f;
 #if MOUSE_CONTROL
 	verticalAngle = -0.01;
 #else
@@ -118,7 +121,7 @@ void Camera::resetToPosition1() {
 }
 
 void Camera::resetToPosition2() {
-	horizontalAngle = 2.628726;
+	horizontalAngle = 2.628726f;
 #if MOUSE_CONTROL
 	position = vec3(-1018.718994, 1743.249878, 1513.233521);
 	verticalAngle = -0.333765;

@@ -27,9 +27,10 @@ SceneObject::SceneObject() {
 
 SceneObject::SceneObject(char const *objFilename) {
     this->_loadOBJ(objFilename);
-	smooth = false;
+	smooth = true;
 	wireframe = false;
 	surfaceType = lit;
+	texture = NULL;
 	check("Created Object");
 }
 
@@ -105,7 +106,7 @@ void SceneObject::render(GLint shader) {
 }
 
 typedef struct {
-	unsigned int vertexIndex[3] = {0}, uvIndex[3] = {0}, normalIndex[3] = {0};
+	unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
 	bool uvs, normals;
 } Face;
 
@@ -166,6 +167,16 @@ void SceneObject::_loadOBJ(const char *filename) {
 		} else if (STARTSWITH("f ")) {
 			// parse faces
 			Face face;
+			
+			face.vertexIndex[0] = 0;
+			face.vertexIndex[1] = 0;
+			face.vertexIndex[2] = 0;
+			face.uvIndex[0] = 0;
+			face.uvIndex[1] = 0;
+			face.uvIndex[2] = 0;
+			face.normalIndex[0] = 0;
+			face.normalIndex[1] = 0;
+			face.normalIndex[2] = 0;
 			
 			int matches = sscanf(buf, "f %d %d %d", &face.vertexIndex[0], &face.vertexIndex[1], &face.vertexIndex[2]);
 			if (matches == 3) {

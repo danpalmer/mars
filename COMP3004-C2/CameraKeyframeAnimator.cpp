@@ -11,6 +11,7 @@
 CameraKeyframeAnimator::CameraKeyframeAnimator(Camera *camera) {
 	this->camera = camera;
 	currentKeyframeIndex = 0;
+	timeOffset = 0.0;
 }
 
 void CameraKeyframeAnimator::reset() {
@@ -32,7 +33,7 @@ bool CameraKeyframeAnimator::animate() {
 	if (currentTime > to->time) {
 		from = to;
 		to = keyframes[(currentKeyframeIndex + 2) % keyframes.size()];
-		currentKeyframeIndex = (currentKeyframeIndex + 1) % keyframes.size();
+		currentKeyframeIndex = (int)((currentKeyframeIndex + 1) % keyframes.size());
 		if (from->time == 0) {
 			return true;
 		}
@@ -50,7 +51,7 @@ bool CameraKeyframeAnimator::animate() {
 CameraKeyframe *CameraKeyframeAnimator::interpolateKeyframes(CameraKeyframe *k1, CameraKeyframe *k2, double time) {
 	CameraKeyframe *now = new CameraKeyframe();
 	
-	float lambda = (time - k1->time) / (k2->time - k1->time);
+	float lambda = (float)((time - k1->time) / (k2->time - k1->time));
 	
 	now->position = k1->position + (lambda * (k2->position - k1->position));
 	now->fieldOfView = k1->fieldOfView + (lambda * (k2->fieldOfView - k1->fieldOfView));

@@ -11,8 +11,8 @@
 #include "utils.h"
 #include "Texture.h"
 
-#define DEFAULT_SIZE 11000.0
-#define PT (size / 2.0)
+#define DEFAULT_SIZE (float)11000.0
+#define PT (float)(size / 2.0)
 
 using namespace glm;
 using namespace std;
@@ -30,7 +30,7 @@ Skybox::Skybox(char const *textureName) {
 void Skybox::render(GLint shader) {
 	bind();
 	
-	int vertsPerTexture = (int)vertices.size() / textures.size();
+	int vertsPerTexture = (int)(vertices.size() / textures.size());
 	for (int i = 0; i < textures.size(); i++) {
 		textures[i]->bind();
 		glDrawArrays(GL_TRIANGLES, i * vertsPerTexture, vertsPerTexture);
