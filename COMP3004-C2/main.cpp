@@ -219,17 +219,6 @@ void initSceneObjects() {
 	// Static objects
 	
 	/*
-	 Landscape
-	 */
-	SceneObject *landscape = new SceneObject("mars-landscape.obj");
-	landscape->texture = new Texture("ground_texture.tga", 0, true);
-	landscape->surfaceType = texturedAndLit;
-	landscape->setMaterial(vec4(0.5922, 0.3216, 0.2588, 1.0), 0.0, 1.0, 0.0, 0.0);
-	landscape->buffer();
-	sceneObjects.push_back(landscape);
-	
-	
-	/*
 	 Main building bases
 	 */
 	SceneObject *bases = new SceneObject("bases.obj");
@@ -323,27 +312,36 @@ void initSceneObjects() {
 	
 	KeyframeAnimator *ship1Animator = new KeyframeAnimator(ship1);
 	KEYFRAME(ship1Animator, 0, vec3(0), vec3(0))
-	KEYFRAME(ship1Animator, 60, vec3(0), vec3(0))
-	KEYFRAME(ship1Animator, 61.5, vec3(0, -20, -20), vec3(20, 0, 0))
-	KEYFRAME(ship1Animator, 65, vec3(-300, -40, -320), vec3(10, 30, -30))
-	KEYFRAME(ship1Animator, 75, vec3(-5000, -300, -5000), vec3(0, 90, 0))
+	KEYFRAME(ship1Animator, 58, vec3(0), vec3(0))
+	KEYFRAME(ship1Animator, 59.5, vec3(0, -20, -20), vec3(20, 0, 0))
+	KEYFRAME(ship1Animator, 63, vec3(-300, -40, -320), vec3(10, 30, -30))
+	KEYFRAME(ship1Animator, 71, vec3(-12000, -300, -12000), vec3(0, 720, 0)) // do a barrel roll
 	animators.push_back(ship1Animator);
 	
+	
 	/*
-	 Ship 2 (circling)
+	 Ship 2 (figure 8)
 	 */
 	SceneObject *ship2 = new SceneObject("ship.obj");
 	ship2->setMaterial(vec4(0.561966, 0.782683, 0.782683, 1.000000), 0.1, 0.9, 0.7, 3000);
-	ship2->translation = vec3(-364, -236, 912);
+	ship2->translation = vec3(-800, -1000, 800);
 	ship2->buffer();
 	sceneObjects.push_back(ship2);
 	
+#define TURN_RADIUS 500
 	KeyframeAnimator *ship2Animator = new KeyframeAnimator(ship2);
-	KEYFRAME(ship2Animator, 0, vec3(0), vec3(0))
-	KEYFRAME(ship2Animator, 60, vec3(0), vec3(0))
-	KEYFRAME(ship2Animator, 61.5, vec3(0, -20, -20), vec3(20, 0, 0))
-	KEYFRAME(ship2Animator, 65, vec3(-300, -40, -320), vec3(10, 30, -30))
-	KEYFRAME(ship2Animator, 75, vec3(-5000, -300, -5000), vec3(0, 90, 0))
+	KEYFRAME(ship2Animator,  0, vec3(0, 0, 0),						vec3(0, 0, 0))
+	KEYFRAME(ship2Animator,  2, vec3(TURN_RADIUS, 0, -TURN_RADIUS),	vec3(0, -90, 30))
+	KEYFRAME(ship2Animator,  4, vec3(2* TURN_RADIUS, 0, 0),			vec3(0, -180, 30))
+	KEYFRAME(ship2Animator,  6, vec3(TURN_RADIUS, 0, TURN_RADIUS), vec3(0, -270, 30))
+	
+	KEYFRAME(ship2Animator,  8, vec3(0, 0, 0),						vec3(0, -360, 0))
+	KEYFRAME(ship2Animator, 10, vec3(-TURN_RADIUS, 0, -TURN_RADIUS), vec3(0, -270, -30))
+	KEYFRAME(ship2Animator, 12, vec3(-2* TURN_RADIUS, 0, 0),		vec3(0, -180, -30))
+	KEYFRAME(ship2Animator, 14, vec3(-TURN_RADIUS, 0, TURN_RADIUS),vec3(0, -90, -30))
+	
+	KEYFRAME(ship2Animator, 16, vec3(0, 0, 0),						vec3(0, 0, 0))
+#undef TURN_RADIUS
 	animators.push_back(ship2Animator);
 	
 #undef KEYFRAME
@@ -383,4 +381,16 @@ void initSceneObjects() {
 #undef LONG
 #undef MEDIUM
 #undef LONG
+	
+	// Load the landscape last because that's the largest part and we want to show progress in the console.
+	
+	/*
+	 Landscape
+	 */
+	SceneObject *landscape = new SceneObject("mars-landscape.obj");
+	landscape->texture = new Texture("ground_texture.tga", 0, true);
+	landscape->surfaceType = texturedAndLit;
+	landscape->setMaterial(vec4(0.5922, 0.3216, 0.2588, 1.0), 0.0, 1.0, 0.0, 0.0);
+	landscape->buffer();
+	sceneObjects.push_back(landscape);
 }
