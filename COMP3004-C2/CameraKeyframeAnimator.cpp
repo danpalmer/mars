@@ -13,10 +13,15 @@ CameraKeyframeAnimator::CameraKeyframeAnimator(Camera *camera) {
 	currentKeyframeIndex = 0;
 }
 
-void CameraKeyframeAnimator::animate() {
+void CameraKeyframeAnimator::reset() {
+	currentKeyframeIndex = 0;
+	timeOffset = glfwGetTime();
+}
+
+bool CameraKeyframeAnimator::animate() {
 	
 	if (keyframes.size() == 0) {
-		return;
+		return true;
 	}
 	
 	double currentTime = glfwGetTime() - timeOffset;
@@ -29,7 +34,7 @@ void CameraKeyframeAnimator::animate() {
 		to = keyframes[(currentKeyframeIndex + 2) % keyframes.size()];
 		currentKeyframeIndex = (currentKeyframeIndex + 1) % keyframes.size();
 		if (from->time == 0) {
-			timeOffset = glfwGetTime();
+			return true;
 		}
 	}
 	
@@ -38,6 +43,8 @@ void CameraKeyframeAnimator::animate() {
 	camera->horizontalAngle = now->horizontalAngle;
 	camera->verticalAngle = now->verticalAngle;
 	camera->fieldOfView = now->fieldOfView;
+	
+	return false;
 }
 
 CameraKeyframe *CameraKeyframeAnimator::interpolateKeyframes(CameraKeyframe *k1, CameraKeyframe *k2, double time) {

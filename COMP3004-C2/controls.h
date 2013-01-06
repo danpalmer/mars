@@ -35,13 +35,14 @@ public:
 	float verticalAngle;
 	float fieldOfView;
 	
-	void computeMatricesFromInputs();
+	void computeMatricesFromInputs(bool ignoreInputs);
 	mat4 getProjectionMatrix();
 	mat4 getViewMatrix();
 	vec3 getPosition();
 	
 	void resetToPosition0();
 	void resetToPosition1();
+	void resetToPosition2();
 };
 
 

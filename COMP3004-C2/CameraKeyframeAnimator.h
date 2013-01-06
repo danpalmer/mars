@@ -39,9 +39,10 @@ class CameraKeyframeAnimator {
 	
 public:
 	CameraKeyframeAnimator(Camera *camera);
-	void animate();
+	bool animate();
 	CameraKeyframe *interpolateKeyframes(CameraKeyframe *k1, CameraKeyframe *k2, double time);
 	void addKeyframe(CameraKeyframe *keyframe);
+	void reset();
 };
 
 #endif /* defined(__COMP3004_C2__CameraKeyframeAnimator__) */

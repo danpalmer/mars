@@ -227,16 +227,16 @@ void SceneObject::_loadOBJ(const char *filename) {
 		} else if (strlen(buf) == 0) {
 			continue;
 		} else {
-			cout << "Unrecognized OBJ token: " << buf << endl;
+			continue;
 		}
 #undef STARTSWITH
 	}
 	
 #if DEBUG
-	cout << "\tRead " << verts.size() << " vertices" << endl;
-	cout << "\tRead " << uvs.size() << " UVs" << endl;
-	cout << "\tRead " << normals.size() << " normals" << endl;
-	cout << "\tRead " << faces.size() << " faces" << endl;
+	cout << verts.size() << " vertices" << endl;
+	cout << uvs.size() << " UVs" << endl;
+	cout << normals.size() << " normals" << endl;
+	cout << faces.size() << " faces" << endl;
 #endif
 	
 	for (unsigned int i = 0; i < faces.size(); i++) {
@@ -264,7 +264,7 @@ void SceneObject::_loadOBJ(const char *filename) {
 		}
 	}
 	
-	cout << "Read object " << filename << endl;
+	cout << "Read object " << filename << endl << endl;
 	fin.close();
 }
 

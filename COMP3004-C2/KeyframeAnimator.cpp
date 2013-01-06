@@ -15,6 +15,11 @@ KeyframeAnimator::KeyframeAnimator(SceneObject *object) {
 	currentKeyframeIndex = 0;
 }
 
+void KeyframeAnimator::reset() {
+	currentKeyframeIndex = 0;
+	timeOffset = glfwGetTime();
+}
+
 void KeyframeAnimator::animate() {
 	
 	if (keyframes.size() == 0) {

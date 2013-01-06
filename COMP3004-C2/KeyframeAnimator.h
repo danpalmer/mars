@@ -42,6 +42,7 @@ public:
 	void animate();
 	Keyframe *interpolateKeyframes(Keyframe *k1, Keyframe *k2, double time);
 	void addKeyframe(Keyframe *keyframe);
+	void reset();
 };
 
 #endif /* defined(__COMP3004_C2__KeyframeAnimator__) */

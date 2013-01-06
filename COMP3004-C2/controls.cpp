@@ -12,7 +12,7 @@ Camera::Camera() {
 	resetToPosition1();
 }
 
-void Camera::computeMatricesFromInputs() {
+void Camera::computeMatricesFromInputs(bool ignoreInputs) {
 	
 	double currentTime = glfwGetTime();
 	float deltaTime = float(currentTime - lastLoopTime);
@@ -23,8 +23,10 @@ void Camera::computeMatricesFromInputs() {
 	glfwGetWindowSize(&width, &height);
 	glfwSetMousePos(width / 2, height / 2);
 	
-	horizontalAngle += mouseSpeed * deltaTime * float(width / 2 - xpos);
-	verticalAngle	+= mouseSpeed * deltaTime * float(height / 2 - ypos);
+	if (!ignoreInputs) {
+		horizontalAngle += mouseSpeed * deltaTime * float(width / 2 - xpos);
+		verticalAngle	+= mouseSpeed * deltaTime * float(height / 2 - ypos);
+	}
 	
 	vec3 direction(
 		cos(verticalAngle) * sin(horizontalAngle),
@@ -40,23 +42,25 @@ void Camera::computeMatricesFromInputs() {
 	
 	vec3 up = cross(right, direction);
 	
-	if (glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS){
-		position += direction * deltaTime * speed;
-	}
-
-	if (glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS){
-		position -= direction * deltaTime * speed;
-	}
-
-	if (glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS){
-		position += right * deltaTime * speed;
-	}
-
-	if (glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS){
-		position -= right * deltaTime * speed;
+	if (!ignoreInputs) {
+		if (glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS){
+			position += direction * deltaTime * speed;
+		}
+		
+		if (glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS){
+			position -= direction * deltaTime * speed;
+		}
+		
+		if (glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS){
+			position += right * deltaTime * speed;
+		}
+		
+		if (glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS){
+			position -= right * deltaTime * speed;
+		}
 	}
 	
-	float FoV = fieldOfView - 5 * glfwGetMouseWheel();
+	float FoV = fieldOfView;
 	ProjectionMatrix = glm::perspective(FoV, float(width / height), 0.1f, 15000.0f);
 	ViewMatrix = glm::lookAt(position, position + direction, up);
 }
@@ -85,4 +89,11 @@ void Camera::resetToPosition1() {
 	horizontalAngle = 0;
 	verticalAngle = -0.25;
 	fieldOfView = 45.0f;
+}
+
+void Camera::resetToPosition2() {
+	position = vec3(-1018.718994, 1743.249878, 1513.233521);
+	horizontalAngle = 2.628726;
+	verticalAngle = -0.333765;
+	fieldOfView = 45;
 }
